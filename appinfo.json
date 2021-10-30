@@ -1,0 +1,33 @@
+{
+  "id":"com.drnull.drpodder",
+
+  "version":"1.0.1",
+  "versionreleasedate": "30-Oct-2021",
+
+  "title":"drPodder",
+  "vendor":"Jon Wise",
+  "vendoremail":"curator@webosarchive.com",
+  "vendorurl":"http://www.webosarchive.com/drpodder",
+
+  "main":"index.html",
+  "icon":"icon.png",
+  "miniicon":"miniicon.png",
+  "type":"web",
+  "theme":"light",
+  "noWindow":true,
+  "noDeprecatedStyles":true,
+
+  "keywords":["podcast", "GuttenPodder", "drpodder", "drPodder", "Dr Podder", "Dr. Podder"],
+
+  "smallicon":"icon32x32.png",
+
+  "support": {
+    "email": {
+      "address": "curator@webosarchive.com",
+      "subject": "Support for drPodder Redux"
+    }
+  },
+
+  "uiRevision": 2 
+
+}

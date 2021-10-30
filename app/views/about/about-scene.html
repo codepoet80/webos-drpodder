@@ -1,0 +1,244 @@
+<div class="palm-scene">
+	<div class="whole-scene-fade-top" x-mojo-scroll-fade="top"></div>
+	<div class="whole-scene-fade-bottom" x-mojo-scroll-fade="bottom"></div>
+		
+	<div class="van-page-header multi-line">
+		<div class="icon multi-line"></div>
+		<div id="title" class="title"></div>
+		<div class="subtitle">Version <span id="version-number"></span> by <span id="vendorname"></span></div>
+	</div>
+
+	<div id='MyListContainer'>
+		<div id="AppHelp_list" x-mojo-element="List" > </div>
+		<div id="AppSupport_list" x-mojo-element="List" > </div>
+	</div>
+
+<hr>
+<div class="palm-text-wrapper">
+
+<h1>Some Help</h1>
+<ul>
+<li>English: Help only availble in english</li>
+<li>España: Ayuda sólo availble en Inglés</li>
+<li>Français: Aide en anglais seulement availble</li>
+<li>Deutsch: Hilfe gibt es derzeit nur auf Englisch</li>
+</ul>
+
+<p>
+ drPodder Redux is a podcast download and listener app for webOS devices. It is
+ derrived work of Guttenpodder and drPodder, a well known podcast app by Jamie Hatfield.
+</p>
+
+<h3>Usage</h3>
+<ul>
+<li> Add your feeds
+<li> Download episodes you're interested in
+<li> Play Podcasts!
+</ul>
+    
+<h3>Feed list</h3>
+<ul>
+<li> the feed list is the first screen you see after starting drPodder
+(not counting the loading screen)</li>
+<li>Feel free to delete any of the default podcasts added during first startup. Swipe them away as usual in webos. </li>
+<li>You can add podcasts by url, search for podcasts or scan for existing media files on your device 
+by using the '+' icon in the bottom left on the feed screen
+  <ul>
+  <li>To enter a feed url directly, choose "Enter Feed URL"<br>
+  <li>To find a Podcast feed by title use "Search Directory"<br>
+  <li>"Dynamic Playlist" creates a virtual feed. That's a selectable mashup of
+       feeds already existing in drPodder
+  <li>"Add local media" searches your device for existing media files (new in drPodder 0.9.0).
+       You can enter 
+       expressions to filter by media title and/or file path. The comparison
+       is case insensitive. 
+       Thanks to Adam Marks for his <a href="http://www.webosnation.com/add-local-media-drPodder">article</a> 
+       on webOS Nation about Guttenpodder's local media feature (written as of GP 0.9.1).
+       <br>
+       Sadly, local media function work only on webos 2.x and higher. 
+       At first use, you may be asked for permisson to access the file system of your device 
+       (this is called "media permission"). Some webos 2.x devices have got
+       a problem here; they do not ask, but do not allow access either. <br>
+       In this case you may run an application to fix this problem; you'll find 
+       it at <a href="http://dl.dropbox.com/u/32016000/com.palm.app.permissions-reset_1.0.0_all.ipk">
+       http://dl.dropbox.com/u/32016000/com.palm.app.permissions-reset_1.0.0_all.ipk</a></li>
+  </ul>
+</li>
+<li>Refresh button to refresh the list of feeds
+<li>Feed artwork should show up on first update, if the feed has one
+<li>Line under feed name contains the first episode name in the feed (depending on the sort order of that feed)
+<li>3 mini icons
+    <ul>
+      <li>disk - number of episodes downloaded/saved
+      <li>star - number of new episodes (their status is set to Unlistened)
+      <li>pause - number of new episodes you've started listening to (count currently not updating, but bookmarks are retained)
+      </ul>
+<li>Tap the mini icon area for feed operations: (Mark Listened &amp; Edit Feed)
+<li>Swipe to delete
+<li>Reorder is supported
+</ul>
+
+
+<h3> Episode List Screen </h3>
+<ul>
+ <li> Grayed out episodes are listened to
+ <li> Button on right:
+  <ul>
+   <li> Blank - listened to, and no file is available
+   <li> Green Down Arrow - Unlistened (new) episode, ready for download
+   <li> Red X - Cancel current download
+   <li> Dark Blue Play - Episode ready to be played
+   <li> Red Minus - Episode has been listened to, file still exists
+  </ul>
+
+ <li> Tap the button on the right for relevent menu choices
+  <ul>
+   <li> Download, play (all), Resume, Restart, Mark [Un]Listened, Episode Details, Delete
+   <li> Restart is the only method for going into an episode and starting from the beginning.
+        All other methods will resume playback from your last saved position
+ </ul>
+ <li> The Episodes are ordered by publiction dates, with the newest at top. 
+      You can change the sorting in the feed preference (new in drPodder 0.9.0)</li>
+ <li> You can reorder the episodes manually, by tap and dragging them (the
+      usual webos way) (new in drPodder 0.9.0, fixed in 0.9.3). </li>
+
+</ul>
+
+<h3> Episode Details Screen </h3>
+<ul>
+ <li> Episode title
+ <li> Playback scrubber with current time and time remaining and  has a buffer indicator also
+ <li> Episode Description (scrollable)
+ <li> Play/Pause, +/-20 seconds, +/- 1 minute button
+ <li> All playback operations *should* save your current position
+ <li> command menu contains settings for sleep timer (new in 0.9.3)
+</ul>
+
+
+<h3> Some Feature </h3>
+<h4> Auto update / refresh </h4>
+<p>
+In the preference screen you can select to auto update at certain intervalls.
+</p>
+<ul>
+<li>Set the auto update switch to "on", 
+<li>select one feed or playlist in the "update feed" drop down list (or select
+"[all]" for all feeds)
+<li>select "daily" in the update type drop down list
+<li>select a time (e.g. 4:45 am)
+<li>depending on the prices of your mobile provider you should set "DL only over WiFi" to "on", 
+    so sound file download will only happens if wifi is connected.
+<li>it's a good idea to set "Autoload" to "on" for those feeds you hear allways (see feed setting)
+</ul>
+and every morning you pick up your webOS device, you've got already your fresh podcasts. 
+
+
+<h3>Links</h3>
+<li>drPodder's <a href="http://www.webosarchive.com/drpodder">home page</a></li>
+<li>Follow <a href="https://twitter.com/drPodder">drPodder development</a> on twitter</li>
+<li>Homebrew <a href="http://www.webosnation.com/drPodder">catalog entry</a> at webos nation</li>
+<li>drPodder <a href="http://forums.webosnation.com/webos-homebrew-apps/319120-drPodder-drpodder-fork.html#post3356476">forum thread</a> at webos nation</li>
+
+<h2>FAQ</h2>
+
+<h4>What is a podcast?</h4>
+A podcast is a type of digital media consisting of an episodic series of audio, video, PDF, or ePub files 
+subscribed to and downloaded through web syndication or streamed online to a computer or mobile device
+(Source: <a href="http://en.wikipedia.org/w/index.php?title=Podcast&oldid=513914983">Wikipedia article "Podcast"</a>)
+
+<h4>What is a feed?</h4>
+A feed is a short file containig description, the url and some other computer
+readable information about podcast episodes. 
+
+<h4>How do I delete a feed?</h4>
+As everywhere in webOS: Swipe it away (tap and hold the feed, and - without
+lifting the finger - swipe it to the right). You'll be asked for confirmation.
+
+<h4>How Do I migrate from drPodder or podFrenzy to drPodder?</h4>
+The easy way: use the Import/Export-Feature with file drpodder.xml or the
+clipboard. You will loose the state of the feeds, but not the feeds
+themself. <br>
+The other way involves coping some internal database. It will keep you all
+feeds, state and downloads. Hopefully. 
+See <a href="http://forums.webosnation.com/webos-homebrew-apps/194583-drpodder-k-prepod-post2299374.html">this posting</a> 
+and this <a href="http://www.webosnation.com/drPodder-latest-update-based-drpodder">article</a>
+for an idea how to do it.
+
+<h4>How do I play all Episodes in a row?</h4>
+In the episode list tap once on the title bar (that thing with the name of the feed). 
+The menu hided there has options to play all episodes from top or from bottom. 
+<br><br>
+Or you tap an episode a little longer, and select "play all from here" 
+
+<h4>I start downloading my episodes, they get about halfway done, then stop downloading and give me an error.</h4>
+Is there any chance your media partition is full? (check under Device Info-Phone-Available)
+
+<h4>Why did you steal drPodder?</h4>
+I didn't. Jamie Hatfield put his app under the "GNU public licence" (GPL).
+So anybody is allowed to copy and change his app as long as this copied app is
+put under the same or compatible licence. And the source of the new app must
+be published (see this <a href="http://www.webosarchive.com/drpodder">page</a>). 
+The big advantage: If an application is discontinued by the
+original author, the user is not left with a starving system (at least, if a
+new maintainer is found).<br> 
+See <a href='http://www.gnu.org/licenses/gpl-3.0-standalone.html'>http://www.gnu.org/licenses/gpl-3.0.txt</a>
+for the licence.
+And <a href="http://forums.webosnation.com/webos-homebrew-apps/319120-drPodder-drpodder-fork.html#post3357130">
+this post</a> may help, too.
+
+<h4>How can I donate?</h4>
+Create, check or update documentation.<br>
+Answer Questions in the forum.<br>
+Buy drPodder from the HP AppCatalog, because without drPodder there would be no
+drPodder<br>
+
+<h4>Why don't you use github for the sources?</h4>
+I'll will. Someday.
+In the meanwhile use this <a href="/download/de.u32.drPodder.src.zip">place</a>.
+
+<h4>Why don't you make an android app? webOS is dead.</h4>
+Yes it is. But I use it still on my Pre 3. So I will maintainig drPodder
+until my Pre will die. Physical. 
+
+<h4>Which feature are planned?</h4>
+A lot of features are impossible, because webOS does not support it. 
+E.g. Speedup of podcast episodes or warning on filessystem low space.
+There are some ideas, but I do not promise anything (error fixing has priority):
+<ul>
+  <li>display duration in episode list</li>
+  <li>skip epsiode button in episode detail</li>
+  <li>using the cam/photo picker for albumart</li>
+  <li>enhance "edit feed" scene to select the playlists the feed is visible in </li>
+  <li>enhance feed option to start episodes at fix offsets (to skip long or boring teasers)</li>
+  <li>enhance feed option to filter episodes for url, description or duration </li>
+  <li>unlikely: syncing with gpodder.net</li>
+  <li>fix translations :)</li>
+</ul>
+
+<p>
+  drPodder Redux is &copy;copyright 2021 Jon Wise
+ (<a href="mailto:curator@webosarchive.com">Mail</a>), 
+ licensed under GPLv3<br>
+ <br>
+ drPodder Redux is a fork of drPodder, which was a fork of drPodder (GPLv3):<br>
+ drPodder is &copy;copyright 2010 Jamie Hatfield<br>
+  <br>
+ drPodder contains code from podfrenzy (GPLv3)<br>
+ podFrenzy is &copy;copyright 2011 Bits Of God Software, LLC (no web site)<br>
+  <br>
+  The full text of the GPLv3 can be found at:
+  <a href='http://www.gnu.org/licenses/gpl-3.0-standalone.html'>http://www.gnu.org/licenses/gpl-3.0.txt</a>. <br>
+  <br>
+  drPodder Logo Design: <a href='http://jamie3d.com/'>Jamie Hamel-Smith</a><br>
+  Original drPodder Logo Concept: <a href='http://www.userinterfaceicons.com/preview.php'>UII</a> <br>
+  <br>
+  Translations (not updated; blame me and not the translators):<br>
+  German: Toby (tklr@P|C)<br>  
+  Spain-Spanish: Alejandro (erdosh@P|C)<br>  
+  Latino-Spanish: Eli (Spyderekz@P|C)<br>  
+  French: Yannick (yannick56@P|C)<br>  
+  Klingon: Michael (roneyii@P|C)/Chris (qurgh@P|C)
+</p>
+
+
+</div>

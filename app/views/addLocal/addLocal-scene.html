@@ -1,0 +1,83 @@
+<div class="palm-page-header">
+    <div class="palm-page-header-wrapper">
+        <div class="icon" id="icon"></div>
+        <div id="dialogTitle" class="title"></div>
+    </div>
+</div>
+
+<div class="palm-group unlabeled">
+    <div class="palm-list">
+
+        <div id="newFeedDiv" class="palm-row first">
+            <div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+                <div class="title">
+                    <div id="titleLabel" class="label right">feed title </div>
+                    <div x-mojo-element="TextField" id="feedNameField"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="albumArtDiv" class="palm-row last">
+            <div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+                <div class="title">
+                    <div id="iconLabel" class="label right">Icon</div>
+                    <div x-mojo-element="TextField" id="albumArt"></div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<div class="palm-group">
+    <div class="palm-group-title"><span id="feedOptions">Options</span></div>
+    <div class="palm-list">
+
+        <div id="sortingListRow" class="palm-row first">
+            <div class="palm-row-wrapper">
+                <div x-mojo-element="ListSelector"  id="sortingList"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="palm-group">
+    <div class="palm-group-title"><span id="feedFilter">Filter</span></div>
+    <div class="palm-list">
+
+         <div class="palm-row first" id="andOrListRow">
+            <div class="palm-row-wrapper">
+                <div x-mojo-element="ListSelector" id="andOrList"></div>
+            </div>
+        </div>
+
+        <div class="palm-row" id="titleFilterGroup">
+            <div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+                <div class="title">
+                    <div id="titleFilterLabel" class="label right">Title filter</div>
+                    <div x-mojo-element="TextField" id="titleFilterField"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="palm-row" id="pathFilterGroup">
+            <div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+                <div class="title">
+                    <div id="pathFilterLabel" class="label right">Path filter</div>
+                    <div x-mojo-element="TextField" id="pathFilterField"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="palm-row last">
+            <div class="palm-row-wrapper">
+                <div x-mojo-element="ToggleButton" id="includeOwnFilesToggle"></div>
+                <div id="includeDrPodderFiles" class="title left"></div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+
