@@ -349,17 +349,17 @@
 }
 
 .titleMessage {
-  top: 55%;
+  top: 65%;
   font-weight: bold;
   font-size: 160%;
 }
 
 .versionMessage {
-  top: 65%;
+  top: 74%;
 }
 
 .loadingMessage {
-  top: 73%;
+  top: 80%;
 }
 
 .titleMessage-tp,
@@ -678,5 +678,9 @@
 }
 
 .palm-page-header .title {
-	padding-left: 15px;
+	padding-left: 55px;
+}
+
+.palm-page-header #episodeDetailsTitle {
+	padding-left: 55px;
 }

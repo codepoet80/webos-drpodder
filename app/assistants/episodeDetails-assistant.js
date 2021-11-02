@@ -103,10 +103,10 @@ EpisodeDetailsAssistant.prototype.setup = function() {
     this.backElement = this.controller.get('icon');
     this.backTapHandler = this.backTap.bindAsEventListener(this);
     this.controller.listen(this.backElement, Mojo.Event.tap, this.backTapHandler);
-    if (Mojo.Environment.DeviceInfo.modelNameAscii == 'TouchPad') {
+    //if (Mojo.Environment.DeviceInfo.modelNameAscii == 'TouchPad') {
         this.backElement.style.display = "block";
-        this.controller.get('episodeDetailsTitle').style.paddingLeft = "55px";
-    }
+        //this.controller.get('episodeDetailsTitle').style.paddingLeft = "55px";
+    //}
 
     var self = this;
     DB.getEpisodeDescription(this.episodeObject, function(description) {
@@ -271,10 +271,10 @@ EpisodeDetailsAssistant.prototype.setup = function() {
 
 EpisodeDetailsAssistant.prototype.backTap = function(event)
 {
-    if (Mojo.Environment.DeviceInfo.modelNameAscii == 'TouchPad') {
+    //if (Mojo.Environment.DeviceInfo.modelNameAscii == 'TouchPad') {
         this.poppingScene = true;
         this.controller.stageController.popScene();
-    }
+    //}
 };
 
 EpisodeDetailsAssistant.prototype.orientationChanged = function(orientation) {
@@ -312,7 +312,7 @@ EpisodeDetailsAssistant.prototype.activate = function() {
     this.adjustHeader();
     this.isForeground = true;
     Mojo.Log.info("EpisodeDetails.activate isForeground = true");
-    Mojo.Event.listen(this.header, Mojo.Event.tap, this.titleTapHandler);
+    Mojo.Event.listen(this.controller.get("episodeDetailsTitle"), Mojo.Event.tap, this.titleTapHandler);
 
     if ((this.episodeObject.enclosure || this.episodeObject.downloaded) && !this.isVideo()) {
         Mojo.Event.listen(this.progress, Mojo.Event.propertyChange, this.progressChangedHandler);
@@ -330,7 +330,8 @@ EpisodeDetailsAssistant.prototype.activate = function() {
 
 EpisodeDetailsAssistant.prototype.deactivate = function() {
 
-    Mojo.Event.stopListening(this.header, Mojo.Event.tap, this.titleTapHandler);
+    Mojo.Event.stopListening(this.backElement, Mojo.Event.tap, this.backTapHandler);
+    Mojo.Event.stopListening(this.controller.get("episodeDetailsTitle"), Mojo.Event.tap, this.titleTapHandler);
 
     if ((this.episodeObject.enclosure || this.episodeObject.downloaded) && !this.isVideo()) {
         Mojo.Event.stopListening(this.progress, Mojo.Event.propertyChange, this.progressChangedHandler);

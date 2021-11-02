@@ -135,11 +135,11 @@ EpisodeListAssistant.prototype.setup = function() {
     this.cmdMenuViewButtonPos    = 0;
     this.cmdMenuRefreshButtonPos = 1;
     
-    if(!_device_.thisDevice.hasGesture){
+    //if(!_device_.thisDevice.hasGesture){
         this.cmdMenuModel.items.push(this.backButton);
         this.cmdMenuViewButtonPos++;
         this.cmdMenuRefreshButtonPos++;
-    }
+    //}
 
     //this.cmdMenuModel.items.push(this.viewButton);
     if(!_device_.thisDevice.hasKeyboard) { 

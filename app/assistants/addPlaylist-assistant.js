@@ -52,10 +52,10 @@ AddPlaylistAssistant.prototype.setup = function() {
     this.backElement = this.controller.get('icon');
     this.backTapHandler = this.backTap.bindAsEventListener(this);
     this.controller.listen(this.backElement, Mojo.Event.tap, this.backTapHandler);
-    if (Mojo.Environment.DeviceInfo.modelNameAscii == 'TouchPad') {
+    //if (Mojo.Environment.DeviceInfo.modelNameAscii == 'TouchPad') {
         this.backElement.style.display = "block";
-        this.controller.get('dialogTitle').style.paddingLeft = "55px";
-    }
+    //    this.controller.get('dialogTitle').style.paddingLeft = "55px";
+    //}
 
     this.controller.get("dialogTitle").update(this.dialogTitle);
 
@@ -127,10 +127,10 @@ AddPlaylistAssistant.prototype.activate = function() {
 
 AddPlaylistAssistant.prototype.backTap = function(event)
 {
-    if (Mojo.Environment.DeviceInfo.modelNameAscii == 'TouchPad') {
+    //if (Mojo.Environment.DeviceInfo.modelNameAscii == 'TouchPad') {
         this.poppingScene = true;
         this.controller.stageController.popScene();
-    }
+    //}
 };
 
 AddPlaylistAssistant.prototype.deactivate = function() {
