@@ -1,16 +1,23 @@
-<div class="search-box">
+<div class="palm-page-header">
+    <div class="palm-page-header-wrapper">
+        <div class="icon" id="icon"></div>
+        <div id="dialogTitle" class="title">Podcast Directory</div>
+    </div>
+</div>
+
+<div class="NOT-search-box">
 <div id="searchBox" class="palm-group">
-    <div id="searchBoxTitle" class="palm-group-title"><span id="searchPodcastDirectory">Search Podcast Directory</span></div>
+    <div id="searchBoxTitle" class="palm-group-title"><span id="searchPodcastDirectory">Search</span></div>
     <div class="palm-list">
-        <div id="providerDiv" class="palm-row first">
+         <div class="palm-row">
             <div class="palm-row-wrapper">
-                <div x-mojo-element="ListSelector" id="searchProviderList"></div>
-			</div>
+                <div id="listUseTiny" x-mojo-element="ListSelector" title="UseTiny" class="right"></div>
+            </div>
         </div>
-        <div id="filterDiv" class="palm-row">
+        <div class="palm-row">
             <div class="palm-row-wrapper">
-                <div x-mojo-element="ListSelector" id="filterList"></div>
-			</div>
+                <div id="listMaxEpisodes" x-mojo-element="ListSelector" title="MaxEpisodes" class="right"></div>
+            </div>
         </div>
         <div class="palm-row last">
             <div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
@@ -25,9 +32,6 @@
 </div>
 <div id="searchBoxSpacer"></div>
 
-<div id="sceneFadeTop" class="scene-fade-top" x-mojo-scroll-fade="top"></div>
+<!--<div id="sceneFadeTop" class="scene-fade-top" x-mojo-scroll-fade="top"></div>-->
 <div id="feedSearchList" x-mojo-element="List"></div>
-<div class="scene-fade-bottom" x-mojo-scroll-fade="bottom"></div>
-
-<div class="search-provider-label-spacer"></div>
-<div id="providerLabel" class="search-provider-label"></div>
+<!--<div class="scene-fade-bottom" x-mojo-scroll-fade="bottom"></div>-->

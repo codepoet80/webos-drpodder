@@ -674,7 +674,7 @@
 .palm-page-header .icon
 {
 	background-image: url(../images/back-flat.png);
-	display:none;
+	display:block;
 }
 
 .palm-page-header .title {
