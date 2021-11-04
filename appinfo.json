@@ -1,10 +1,10 @@
 {
   "id":"com.drnull.drpodder",
 
-  "version":"1.0.2",
+  "version":"1.1.0",
   "versionreleasedate": "30-Oct-2021",
 
-  "title":"drPodder",
+  "title":"drPodder Redux",
   "vendor":"Jon Wise",
   "vendoremail":"curator@webosarchive.com",
   "vendorurl":"http://www.webosarchive.com/drpodder",
