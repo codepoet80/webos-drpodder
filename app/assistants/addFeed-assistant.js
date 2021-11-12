@@ -48,18 +48,13 @@ AddFeedAssistant.prototype.setup = function() {
             {label: $L("Help"), command: "help-cmd"}
         ]
     };
-
     this.controller.setupWidget(Mojo.Menu.appMenu, this.menuAttr, this.menuModel);
 
     // Add back button functionality for the TouchPad
     this.backElement = this.controller.get('icon');
     this.backTapHandler = this.backTap.bindAsEventListener(this);
     this.controller.listen(this.backElement, Mojo.Event.tap, this.backTapHandler);
-    //if (Mojo.Environment.DeviceInfo.modelNameAscii == 'TouchPad') {
-        this.backElement.style.display = "block";
-    //    this.controller.get('dialogTitle').style.paddingLeft = "55px";
-    //}
-
+   
     this.controller.setupWidget(Mojo.Menu.commandMenu, this.handleCommand, this.cmdMenuModel);
     this.controller.setupWidget("newFeedURL", {
             hintText : $L({value:"RSS feed URL", key:"RSSFeedURL"}),
@@ -254,10 +249,8 @@ AddFeedAssistant.prototype.activate = function() {
 
 AddFeedAssistant.prototype.backTap = function(event)
 {
-    //if (Mojo.Environment.DeviceInfo.modelNameAscii == 'TouchPad') {
-        this.poppingScene = true;
-        this.controller.stageController.popScene();
-    //}
+    var event = Mojo.Event.make(Mojo.Event.back);
+    this.handleCommand(event);
 };
 
 AddFeedAssistant.prototype.deactivate = function() {
@@ -510,8 +503,8 @@ AddFeedAssistant.prototype.checkFailure = function(transport) {
     Mojo.Log.error("checkFailure done");
 };
 
-
 AddFeedAssistant.prototype.handleCommand = function(event) {
+    Mojo.Log.error("handling command");
     if (event.type === Mojo.Event.command) {
         switch (event.command) {
             case "authentication-cmd":
@@ -537,6 +530,7 @@ AddFeedAssistant.prototype.handleCommand = function(event) {
                 break;
         }
     } else if (event.type === Mojo.Event.back) {
+        Mojo.Log.error("Received back event from Mojo!");
         event.stop();
         event.stopPropagation();
         this.checkFeed();

@@ -623,7 +623,6 @@ Episode.prototype.deleteFile = function(ignore) {
     }
 };
 
-
 Episode.prototype.remove = function(ignore) {
      Mojo.Log.info("removing episode %s ...", this.title);
      this.downloaded = false;
@@ -640,7 +639,6 @@ Episode.prototype.remove = function(ignore) {
      //Mojo.Log.info("post length: %d", this.feedObject.episodes.length);
      this.feedObject.episodeDeleted();
 };
-
 
 Episode.prototype.cancelDownload = function(ignore) {
     if (this.downloading) {
@@ -667,6 +665,7 @@ Episode.prototype.isDownloadable = function() {
          & !this.downloading
          & !this.feedObject.isLocalMedia
 }
+
 Episode.prototype.isDeletable = function() {
     return this.downloaded 
          & !this.downloading

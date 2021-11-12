@@ -18,7 +18,7 @@ FeedListAssistant.prototype.appMenuModel = {
         },
         {label: $L("Preferences"), command: "prefs-cmd"},
         {label: $L({value:"Report a Problem", key:"reportProblem"}), command: "report-cmd"},
-        {label: $L("Help"), command: "help-cmd"}
+        //{label: $L("Help"), command: "help-cmd"}
     ]
 };
 
@@ -230,8 +230,9 @@ FeedListAssistant.prototype.loadDefaultFeeds = function() {
     var dialog = new drnull.Dialog.Confirm(this, 
         $L({value:"Add Default Feeds", key:"addDefaultFeeds"}),
         $L({value:"Would you like to add the following feeds?", key:"drpodderDefaults"}) +
-        "<ul><li>This Week in Tech</li>" +
-        "<li>Stuff You Should Know</li></ul>",
+        "<ul><li>PalmCast (Restored)</li>" +
+        "<li>This Week in Tech (Tiny Feed)</li>" +
+        "<li>Stuff You Should Know (Tiny Feed)</li></ul>",
         function() {
             this._loadDefaultFeeds();
         }.bind(this),

@@ -12,18 +12,13 @@ PreferencesAssistant.prototype.setup = function() {
             {label: $L("Help") + '...', command: "help-cmd"}
         ]
     };
-
     this.controller.setupWidget(Mojo.Menu.appMenu, this.menuAttr, this.menuModel);
 
     // Add back button functionality for the TouchPad
     this.backElement = this.controller.get('icon');
     this.backTapHandler = this.backTap.bindAsEventListener(this);
     this.controller.listen(this.backElement, Mojo.Event.tap, this.backTapHandler);
-    //if (Mojo.Environment.DeviceInfo.modelNameAscii == 'TouchPad') {
-        this.backElement.style.display = "block";
-    //    this.controller.get('dialogTitle').style.paddingLeft = "55px";
-    //}
-
+ 
     this.controller.setupWidget("freeRotationToggle",
         {},
         { value : Prefs.freeRotation });
@@ -232,10 +227,8 @@ PreferencesAssistant.prototype.activate = function() {
 
 PreferencesAssistant.prototype.backTap = function(event)
 {
-    //if (Mojo.Environment.DeviceInfo.modelNameAscii == 'TouchPad') {
-        this.poppingScene = true;
-        this.controller.stageController.popScene();
-    //}
+    var event = Mojo.Event.make(Mojo.Event.back);
+    this.handleCommand(event);
 };
 
 PreferencesAssistant.prototype.deactivate = function() {
@@ -398,15 +391,10 @@ PreferencesAssistant.prototype.infomodus = function(event) {
     Prefs.debugSwitch = event.value;
 };
 
-
 PreferencesAssistant.prototype.handleCommand = function(event) {
-    if(event.type === Mojo.Event.command){
-        this.cmd= event.command;
-        switch(this.cmd){
-            case 'cmd-backButton' :
-                this.controller.stageController.popScene();
-                break;
-        }
+    if(event.type === Mojo.Event.back || (event.type === Mojo.Event.command && event.command == "cmd-backButton")) {
+        this.controller.stageController.popScene();
+        break;
     }
 }
 

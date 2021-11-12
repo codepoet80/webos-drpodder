@@ -13,7 +13,6 @@ function EpisodeDetailsAssistant(episode, options) {
     this.fwd60Pos=4;   
 };
 
-
 EpisodeDetailsAssistant.prototype.progressAttr = {
     sliderProperty: "value",
     progressStartProperty: "progressStart",
@@ -103,10 +102,6 @@ EpisodeDetailsAssistant.prototype.setup = function() {
     this.backElement = this.controller.get('icon');
     this.backTapHandler = this.backTap.bindAsEventListener(this);
     this.controller.listen(this.backElement, Mojo.Event.tap, this.backTapHandler);
-    //if (Mojo.Environment.DeviceInfo.modelNameAscii == 'TouchPad') {
-        this.backElement.style.display = "block";
-        //this.controller.get('episodeDetailsTitle').style.paddingLeft = "55px";
-    //}
 
     var self = this;
     DB.getEpisodeDescription(this.episodeObject, function(description) {
@@ -136,50 +131,16 @@ EpisodeDetailsAssistant.prototype.setup = function() {
 
     }.bind(this));
 
-    /*
-    var viewMenuPrev = {icon: "", command: "", label: " "};
-    var viewMenuNext = {icon: "", command: "", label: " "};
-    if (this.episodeObject.displayOrder > 0) {
-        viewMenuPrev = {icon: "back", command: "feedPrev-cmd"};
-    }
-
-    if (this.episodeObject.displayOrder < this.episodeObject.feedObject.episodes.length) {
-        viewMenuNext = {icon: "forward", command: "feedNext-cmd"};
-    }
-
-    this.viewMenuModel.items = [{items: [viewMenuPrev,
-                                        {label: this.episodeObject.title, height: 100, width: 200, command: "edit-cmd"},
-                                        viewMenuNext]}];
-    this.controller.setupWidget(Mojo.Menu.viewMenu,
-                                {}, this.viewMenuModel);
-    */
-
-
     this.progressModel.value = 0;
     this.progressModel.progressStart = 0;
     this.progressModel.progressEnd = 0;
 
     this.controller.setupWidget("progress", this.progressAttr, this.progressModel);
     this.progress = this.controller.get("progress");
-    //this.cmdMenuModel = {items: [{},{},{},{},{}]};
     this.titleTapHandler = this.titleTap.bind(this);
     this.audioObject = {};
     this.player = {};
 
-    if(!_device_.thisDevice.hasGesture){
-        //this.cmdMenuModel = {items: [{},{},{},{},{},{}]};
-        //this.cmdMenuModel.items[0] = this.menuCommandItems.back;
-        
-        //TODO: Change visibility of back button
-
-        /*this.bak60Pos=1;
-        this.bak30Pos=2;
-        this.playPausePos=3;
-        this.fwd30Pos=4;
-        this.fwd60Pos=5;*/
-    } else {
-        //this.cmdMenuModel = {items: [{},{},{},{},{}]};
-    }
     this.cmdMenuModel.items[1] = this.menuCommandItems.playerControls;
     this.refreshMenu();
     if (this.episodeObject.enclosure || this.episodeObject.downloaded) {
@@ -271,10 +232,10 @@ EpisodeDetailsAssistant.prototype.setup = function() {
 
 EpisodeDetailsAssistant.prototype.backTap = function(event)
 {
-    //if (Mojo.Environment.DeviceInfo.modelNameAscii == 'TouchPad') {
-        this.poppingScene = true;
-        this.controller.stageController.popScene();
-    //}
+    Mojo.Log.error("*** Event notice: doing backTap");
+
+    this.poppingScene = true;
+    this.controller.stageController.popScene();
 };
 
 EpisodeDetailsAssistant.prototype.orientationChanged = function(orientation) {
@@ -330,6 +291,8 @@ EpisodeDetailsAssistant.prototype.activate = function() {
 
 EpisodeDetailsAssistant.prototype.deactivate = function() {
 
+    Mojo.Log.error("*** Event notice: doing deactivate");
+
     Mojo.Event.stopListening(this.backElement, Mojo.Event.tap, this.backTapHandler);
     Mojo.Event.stopListening(this.controller.get("episodeDetailsTitle"), Mojo.Event.tap, this.titleTapHandler);
 
@@ -352,6 +315,9 @@ EpisodeDetailsAssistant.prototype.deactivate = function() {
 };
 
 EpisodeDetailsAssistant.prototype.cleanup = function() {
+
+    Mojo.Log.error("*** Event notice: doing cleanup");
+
     this.sleepTimerStop(); 
     this.setTimer(false);
     if (this.episodeObject.enclosure) {
@@ -454,8 +420,6 @@ EpisodeDetailsAssistant.prototype.setTimer = function(bool) {
 
 EpisodeDetailsAssistant.prototype.readyToPlay = function() {
     if (this.audioObject && this.audioObject.pause) {this.audioObject.pause();}
-    //for (var p in this.audioObject) {Mojo.Log.error("ao.%s=%s", p, this.audioObject[p]);}
-    //for (var p in this.audioExt) {Mojo.Log.error("ae.%s=%s", p, this.audioExt[p]);}
 
     if (this.episodeObject.file) {
         Mojo.Log.info("Setting [%s] file src to:[%s]", this.episodeObject.type, this.episodeObject.file);
@@ -551,11 +515,6 @@ EpisodeDetailsAssistant.prototype.handleError = function(event) {
     }
 
     this.bookmark();
-    /*this.cmdMenuModel.items[1] = { items: [] };
-    this.cmdMenuModel.items[1].items[this.bak60Pos] = {};
-    this.cmdMenuModel.items[1].items[this.bak30Pos] = {};
-    this.cmdMenuModel.items[1].items[this.fwd30Pos] = {};
-    this.cmdMenuModel.items[1].items[this.fwd60Pos] = {};*/
     this.enablePlay(true);
     this.setStatus();
     this.resume = true;
@@ -652,7 +611,6 @@ EpisodeDetailsAssistant.prototype.setStatus = function(message, maxDisplay) {
     this.sleepTimerStart(); 
 };
 
-
 EpisodeDetailsAssistant.prototype.sleepTimerStart = function(seconds) {
     if( seconds ) {
        Util.sleepRest = seconds;
@@ -691,10 +649,6 @@ EpisodeDetailsAssistant.prototype.sleepTimerHandler = function() {
         Util.showError("Replay paused, because the Sleep Timer has expired");
     }
 }
-
-
-//----
-
 
 EpisodeDetailsAssistant.prototype.statusTimer = function() {
     var dots = "";
@@ -852,13 +806,16 @@ EpisodeDetailsAssistant.prototype.handleCommand = function(event) {
             case "sleeptimer-2700-cmd": this.sleepTimerStart(2700); break;
             case "sleeptimer-3600-cmd": this.sleepTimerStart(3600); break;
         
-        case 'cmd-backButton' :
+        case 'cmd-backButton':
+            Mojo.Log.error("** Event Notice: Back button was pressed");
             this.backTap();
             break;
         }
     } else if (event.type === Mojo.Event.back) {
-        this.poppingScene = true;
-        this.controller.stageController.popScene();
+        Mojo.Log.error("** Event Notice: Mojo Back event was fired");
+        event.stop();
+        event.stopPropagation();
+        this.backTap();
     }
 
 };
@@ -1118,6 +1075,7 @@ EpisodeDetailsAssistant.prototype.refreshMenu = function() {
 };
 
 EpisodeDetailsAssistant.prototype.onBlur = function() {
+    Mojo.Log.error("** Event notice: doing blur");
     this.bookmark();
     this.isForeground = false;
     Mojo.Log.info("onblur: isForeground = %s", this.isForeground);

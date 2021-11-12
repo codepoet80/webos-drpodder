@@ -37,18 +37,13 @@ AddLocalAssistant.prototype.setup = function() {
             {label: $L("Help"), command: "help-cmd"}
         ]
     };
-
     this.controller.setupWidget(Mojo.Menu.appMenu, this.menuAttr, this.menuModel);
 
     // Add back button functionality for the TouchPad
     this.backElement = this.controller.get('icon');
     this.backTapHandler = this.backTap.bindAsEventListener(this);
     this.controller.listen(this.backElement, Mojo.Event.tap, this.backTapHandler);
-    //if (Mojo.Environment.DeviceInfo.modelNameAscii == 'TouchPad') {
-        this.backElement.style.display = "block";
-    //    this.controller.get('dialogTitle').style.paddingLeft = "55px";
-    //}
-
+ 
 	this.controller.setupWidget(Mojo.Menu.commandMenu, this.handleCommand, this.cmdMenuModel);
 
     this.controller.setupWidget("feedNameField", {
@@ -134,10 +129,8 @@ AddLocalAssistant.prototype.activate = function() {
 
 AddLocalAssistant.prototype.backTap = function(event)
 {
-    //if (Mojo.Environment.DeviceInfo.modelNameAscii == 'TouchPad') {
-        this.poppingScene = true;
-        this.controller.stageController.popScene();
-    //}
+    var event = Mojo.Event.make(Mojo.Event.back);
+    this.handleCommand(event);
 };
 
 AddLocalAssistant.prototype.deactivate = function() {
@@ -191,38 +184,43 @@ AddLocalAssistant.prototype.checkFeed = function() {
     // If the filter is the same, then assume that it's just a title change,
     // update the feed title and close the dialog. Otherwise update the feed.
     if (!this.newFeed && this.feed !== null
-         && this.feed.titleFilterExp === this.titleFilterExpModel.value 
-         && this.feed.pathFilterExp  === this.pathFilterExpModel.value 
-         && this.feed.filterMode     === this.filterModeModel.value 
+        && this.feed.titleFilterExp === this.titleFilterExpModel.value 
+        && this.feed.pathFilterExp  === this.pathFilterExpModel.value 
+        && this.feed.filterMode     === this.filterModeModel.value 
     ) { // filter not changed
-        Mojo.Log.info("feed filterexp not changed: %s", this.titleFilterExpModel.value);
+        Mojo.Log.error("feed filterexp not changed: %s", this.titleFilterExpModel.value);
         this.updateFields();
         DB.saveFeed(this.feed);
         this.controller.stageController.popScene({feedChanged: true, feedIndex: feedModel.items.indexOf(this.feed)});
     } else {
-        Mojo.Log.info("feed filterexp changed: %s", this.titleFilterExpModel.value);
-        //  If a new feed, push the entered feed data on to the feedlist and
-        //  call processFeed to evaluate it.
-        if (this.newFeed) {
-            Mojo.Log.info("new local media feed. filterexp: %s", this.titleFilterExpModel.value);
-            this.feed = new Feed();
-            this.feed.interval = 60000;
-        }
-        this.feed.isLocalMedia = true;
-        this.updateFields();
-        Mojo.Log.info("saving filterexp: %s", this.feed.pathFilterExp);
+        Mojo.Log.error("feed filterexp changed: %s", this.titleFilterExpModel.value);
+        if (this.titleFilterExpModel.value != null) {
+            //  If a new feed, push the entered feed data on to the feedlist and
+            //  call processFeed to evaluate it.
+            if (this.newFeed) {
+                Mojo.Log.error("new local media feed. filterexp: %s", this.titleFilterExpModel.value);
+                this.feed = new Feed();
+                this.feed.interval = 60000;
+            }
+            this.feed.isLocalMedia = true;
+            this.updateFields();
+            Mojo.Log.error("saving filterexp: %s", this.feed.pathFilterExp);
 
-        var results = {};
-        if (this.newFeed) {
-            feedModel.items.push(this.feed);
-            results.feedAdded = true;
+            var results = {};
+            if (this.newFeed) {
+                feedModel.items.push(this.feed);
+                results.feedAdded = true;
+            } else {
+                results.feedChanged = true;
+                results.feedIndex = feedModel.items.indexOf(this.feed);
+                DB.saveFeed(this.feed);
+            }
+            this.feed.update(); 
+            this.controller.stageController.popScene(results);
         } else {
-            results.feedChanged = true;
-            results.feedIndex = feedModel.items.indexOf(this.feed);
-            DB.saveFeed(this.feed);
+            //If the new feed is empty, this is a cancel
+            this.controller.stageController.popScene();
         }
-        this.feed.update(); 
-        this.controller.stageController.popScene(results);
     }
 };
 
