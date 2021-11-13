@@ -27,7 +27,7 @@ EpisodeListAssistant.prototype.filterMenuModel = {
         {label: $L("ALL"), command: "filter-all-cmd"},
         {label: $L("New"), command: "filter-new-cmd"},
         {label: $L("Old"), command: "filter-old-cmd"},
-        {label: $L("Not Downloaded & New"), command: "filter-notdownloadednew-cmd"},
+        {label: $L("Undownloaded & New"), command: "filter-notdownloadednew-cmd"},
         {label: $L("Downloaded & New"), command: "filter-downloadednew-cmd"},
         {label: $L("Downloaded & Old"), command: "filter-downloadedold-cmd"},
         {label: $L("Downloaded"), command: "filter-downloaded-cmd"},
@@ -55,7 +55,7 @@ EpisodeListAssistant.prototype.filterEpisodes = function() {
             case "downloaded":
                 filterFunc = function(e) {return e.isLocalPlayable();};
                 break;
-            case "not downloaded & new":
+            case "undownloaded & new":
                 filterFunc = function(e) {return !e.isLocalPlayable() && !e.listened;};
                 break;
             case "downloaded & new":
@@ -134,19 +134,14 @@ EpisodeListAssistant.prototype.setup = function() {
     
     this.cmdMenuViewButtonPos    = 0;
     this.cmdMenuRefreshButtonPos = 1;
-    
-    //if(!_device_.thisDevice.hasGesture){
-        this.cmdMenuModel.items.push(this.backButton);
-        this.cmdMenuViewButtonPos++;
-        this.cmdMenuRefreshButtonPos++;
-    //}
+    //TODO: JW - This was necessary for old approach to back button and should be cleaned up
+    this.cmdMenuModel.items.push(this.backButton);
+    this.cmdMenuViewButtonPos++;
+    this.cmdMenuRefreshButtonPos++;
 
-    //this.cmdMenuModel.items.push(this.viewButton);
     if(!_device_.thisDevice.hasKeyboard) { 
         // without keyboard add a search button to open virtual keyboard 
         this.filterArea.items.push(this.filterFieldButton); 
-//        this.cmdMenuModel.items.push(this.filterFieldButton);
-  //      this.cmdMenuRefreshButtonPos++;
     }
     this.cmdMenuModel.items.push(this.filterArea);
     this.cmdMenuModel.items.push(this.refreshButton);
@@ -441,7 +436,7 @@ EpisodeListAssistant.prototype.handleCommand = function(event) {
                 this.handleFilterCommand("downloaded & new");
                 break;
             case "filter-notdownloadednew-cmd":
-                this.handleFilterCommand("not downloaded & new");
+                this.handleFilterCommand("undownloaded & new");
                 break;
             case "filter-old-cmd":
                 this.handleFilterCommand("old");
@@ -487,8 +482,11 @@ EpisodeListAssistant.prototype.handleCommand = function(event) {
 
 EpisodeListAssistant.prototype.handleFilterCommand = function(filter) {
     this.feedObject.viewFilter = filter;
-    this.cmdMenuModel.items[this.cmdMenuViewButtonPos].label = $L("View") + ": " + this.titleCaseString($L(filter));
+    Mojo.Log.error("title was: " + JSON.stringify(this.cmdMenuModel.items));
+    Mojo.Log.error("filter was: " + filter);
+    this.cmdMenuModel.items[1].items[0].label = $L("View") + ": " + this.titleCaseString($L(filter));
     this.controller.modelChanged(this.cmdMenuModel);
+    Mojo.Log.error("title is: " + JSON.stringify(this.cmdMenuModel.items));
     this.filterEpisodes();
     DB.saveFeed(this.feedObject);
 };
