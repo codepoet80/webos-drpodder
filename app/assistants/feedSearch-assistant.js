@@ -84,7 +84,16 @@ FeedSearchAssistant.prototype.setup = function() {
 	};
 
 	this.controller.setupWidget(Mojo.Menu.appMenu, this.menuAttr, this.menuModel);
-
+	//Spinner
+	this.controller.setupWidget("spinnerLoad",
+		this.attributes = {
+			spinnerSize: "small"
+		},
+		this.model = {
+			spinning: false
+		}
+	); 
+  
 	//Feed Type Picker
 	this.controller.setupWidget("listUseTiny",
 		this.attributes = {
@@ -210,11 +219,13 @@ FeedSearchAssistant.prototype.keywordChange = function(event) {
 	if (event.originalEvent && event.originalEvent.keyCode === Mojo.Char.enter) {
 		this.keywordField.mojo.blur();
 		var ss = this.searchServices[this.searchService];
+		this.controller.get('spinnerLoad').mojo.start();
 
 		this.listModel.items = [];
 		this.controller.modelChanged(this.listModel);
 
 		ss.search(event.value, function(results) {
+			this.controller.get('spinnerLoad').mojo.stop();
 			var numFeeds = results.length;
 			this.listModel.items = results;
 
@@ -229,13 +240,19 @@ FeedSearchAssistant.prototype.keywordChange = function(event) {
 };
 
 FeedSearchAssistant.prototype.selection = function(event) {
-	//Mojo.Log.error("You clicked on: [%s], [%s]", event.item.title, event.item.url);
-	if (UseTinyFeed) {
-		Mojo.Log.info("Building " + event.item.title + " Tiny Feed with a max of " + MaxEpisodes + " for URL " + event.item.url)
-		event.item.url = this.buildURL("tiny") + "?url=" + this.base64UrlEncode(event.item.url) + "&max=" + MaxEpisodes;
+	Mojo.Log.error("You clicked on: [%s], [%s], [%s]", event.item.title, event.item.url, event.originalEvent.target.className);
+	
+	if (event.originalEvent.target.className.indexOf("info-icon") != -1) { //info
+        //this.handlePopupChoose(event.item, "do-complete");
+		Mojo.Log.error("User wants more info!");
+    } else {
+		if (UseTinyFeed) {
+			Mojo.Log.info("Building " + event.item.title + " Tiny Feed with a max of " + MaxEpisodes + " for URL " + event.item.url)
+			event.item.url = this.buildURL("tiny") + "?url=" + this.base64UrlEncode(event.item.url) + "&max=" + MaxEpisodes;
+		}
+		Mojo.Log.error("Final Feed URL: " + event.item.url)
+		this.controller.stageController.popScene({feedToAdd: event.item});
 	}
-	Mojo.Log.error("Final Feed URL: " + event.item.url)
-	this.controller.stageController.popScene({feedToAdd: event.item});
 };
 
 FeedSearchAssistant.prototype.backTap = function(event)

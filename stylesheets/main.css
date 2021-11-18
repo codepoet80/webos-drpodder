@@ -684,3 +684,30 @@
 .palm-page-header #episodeDetailsTitle {
 	padding-left: 55px;
 }
+
+.palm-row-wrapper.detail {
+    padding: 3px;
+}
+
+.directory-row {
+    padding: 8px 0px 8px 8px;
+}
+
+.info-icon {
+    float: right;
+    visibility: visible;
+    margin-top: -10px;
+	margin-right: -4px;
+	padding-left: 4px;
+	padding-bottom: 10px;
+	padding-right: 4px;
+    width: 30px;
+	height: 38px;
+
+	background: url(../images/item-details-button-press.png);
+    background: url(../images/item-details-button.png) center center no-repeat;
+}
+
+.info-icon.selected {
+	background: url(../images/item-details-button-press.png);
+}
