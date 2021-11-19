@@ -58,9 +58,8 @@ FeedDetailAssistant.prototype.activate = function() {
        example, key handlers that are observing the document */
     Mojo.Event.listen(this.controller.get("divPodcastTitle"), Mojo.Event.tap, this.titleTap.bind(this));
     
-    DrPodder.CurrentShareURL = "http://podcasts.webosarchive.com/index.php?search=" + encodeURIComponent(DrPodder.PodcastDetails.title);
-    Mojo.Controller.getAppController().showBanner({ messageText: 'Touch2Share Ready!', icon: 'assets/notify.png' }, { source: 'notification' });
-
+    DrPodder.CurrentShareURL = "http://podcasts.webosarchive.com/detail.php?id=" + encodeURIComponent(DrPodder.PodcastDetails.id);
+    Mojo.Controller.getAppController().showBanner({ messageText: 'Touch2Share Ready!', icon: 'images/share.png' }, { source: 'notification' });
 };
 
 
@@ -77,7 +76,7 @@ FeedDetailAssistant.prototype.deactivate = function(event) {
     /* remove any event handlers you added in activate and do any other cleanup that should happen before
        this scene is popped or another scene is pushed on top */
 
-    Mojo.Event.stopListening(this.controller.get("divPodcastTitle"), Mojo.Event.tap, this.titleTap.bind(this));
+    DrPodder.CurrentShareURL = null;
 };
 
 FeedDetailAssistant.prototype.cleanup = function(event) {

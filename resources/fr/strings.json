@@ -68,7 +68,7 @@
 	"sorry2": "J'espère que vous pouvez résoudre votre problème. Veuillez contacter support@drPodder.com si vous avez besoin d'aide.",
 	"shareEpisodeSubject": "Découvrez ce podcast que j'ai trouvé avec drPodder!",
 	"shareEpisodeBody": "Salut,<br/> J'ai pensé que vous aimeriez découvrir ce super podcast que j'apprécie dans <a href=\"http://developer.palm.com/appredirect/?packageid=com.drnull.drpodder\">drPodder</a> sur mon téléphone Palm webOS!<br/><br/> Pour télécharger l'épisode, cliquez simplement sur ce lien: <a href=\"#{episodeURL}\">#{episodeTitle}</a><br/><br/> Pour vous abonner à ce podcast vous-même, copiez le lien suivant et collez-le dans votre récupérateur de podcast favori!<br/><br/>Titre du podcast: <a href=\"#{podcastURL}\">#{podcastTitle}</a><br/>URL du podcast:<br/>#{podcastURL}<br/><br/>",
-
+	"sharePodcastBody": "Salut,<br/> J'ai pensé que vous aimeriez découvrir ce super podcast que j'apprécie dans <a href=\"http://developer.palm.com/appredirect/?packageid=com.drnull.drpodder\">drPodder</a> sur mon téléphone Palm webOS!<br/><br/> Pour vous abonner à ce podcast vous-même, copiez le lien suivant et collez-le dans votre récupérateur de podcast favori!<br/><br/>Titre du podcast: <a href=\"#{podcastURL}\">#{podcastTitle}</a><br/>URL du podcast:<br/>#{podcastURL}<br/><br/>",
 	"playExternal": "Lire en utilisant le lecteur de webOS",
 	"shareEpisode": "Partager cet épisode",
 	"viaEmail": "Via courriel",

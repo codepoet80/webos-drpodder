@@ -68,7 +68,7 @@
 	"sorry2": "bIQaHnISchugh; support@drPodder.com rI'.",
 	"shareEpisodeSubject": "Check out this podcast I found with drPodder!",
 	"shareEpisodeBody": "Hi,<br/><br/>I thought you'd like to check out this great podcast I'm enjoying in <a href=\"http://developer.palm.com/appredirect/?packageid=com.drnull.drpodder\">drPodder</a> on my Palm webOS phone!<br/><br/>To download the episode, just click this link: <a href=\"#{episodeURL}\">#{episodeTitle}</a><br/><br/>To subscribe to this podcast yourself, simply copy the following link and paste it into your favorite Podcatcher!<br/><br/>Podcast Title: <a href=\"#{podcastURL}\">#{podcastTitle}</a><br/>Podcast URL:<br/>#{podcastURL}<br/><br/>",
-
+	"sharePodcastBody": "Hi,<br/><br/>I thought you'd like to check out this great podcast I'm enjoying in <a href=\"http://developer.palm.com/appredirect/?packageid=com.drnull.drpodder\">drPodder</a> on my Palm webOS phone!<br/><br/>To subscribe to this podcast yourself, simply copy the following link and paste it into your favorite Podcatcher!<br/><br/>Podcast Title: <a href=\"#{podcastURL}\">#{podcastTitle}</a><br/>Podcast URL:<br/>#{podcastURL}<br/><br/>",
 	"playExternal": "webOS Player lo'",
 	"shareEpisode": "Share this Episode",
 	"viaEmail": "jabbI''ID lo'",

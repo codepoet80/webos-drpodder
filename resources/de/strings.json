@@ -68,7 +68,7 @@
 	"sorry2": "Ich hoffe, Sie können Ihr Problem lösen. Bitte wenden Sie sich an curator@webosarchive.com, wenn Sie weitere Hilfe benötigen.",
 	"shareEpisodeSubject": "Diesen Podcast habe ich mittels der App drPodder Redux gefunden!",
 	"shareEpisodeBody": "Hallo,<br/><br/>vielleicht gefällt Dir dieser Podcast, den ich gerade mit der App drPodder Redux auf meinem Palm webOS-Telefon genieße.<br/><br/>Für den Download der Episode einfach auf diesen Link klicken: <a href=\"#{episodeURL}\">#{episodeTitle}</a></a><br/><br/>Um selber diesen Podcast zu abonnieren, kopiere einfach den folgenden Link und füge ihn in den Podcatcher Deiner Wahl ein!<br/><br/>Podcast-Titel: <a href=\"#{podcastURL}\">#{podcastTitle}</a><br/>Podcast-URL:<br/>#{podcastURL}",
-
+	"sharePodcastBody": "Hallo,<br/><br/>vielleicht gefällt Dir dieser Podcast, den ich gerade mit der App drPodder Redux auf meinem Palm webOS-Telefon genieße.<br/><br/>Um selber diesen Podcast zu abonnieren, kopiere einfach den folgenden Link und füge ihn in den Podcatcher Deiner Wahl ein!<br/><br/>Podcast-Titel: <a href=\"#{podcastURL}\">#{podcastTitle}</a><br/>Podcast-URL:<br/>#{podcastURL}",
 	"playExternal": "Abspielen mit webOS-Player",
 	"shareEpisode": "Verteilung Episode",
 	"viaEmail": "per E-Mail",

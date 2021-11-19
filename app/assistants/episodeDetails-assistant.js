@@ -48,7 +48,6 @@ EpisodeDetailsAssistant.prototype.menuModel = {
                  {label: $L({value:"Copy Feed URL",    key:"copyFeedURL"   }), command: "copyFeed-cmd"}]
         },
         {label: $L({value:"Report a Problem", key:"reportProblem"}), command: "report-cmd"},
-        {label: $L("Help"), command: "help-cmd"}
     ]
 };
 
@@ -257,7 +256,6 @@ EpisodeDetailsAssistant.prototype.orientationChanged = function(orientation) {
     }
 };
 
-
 EpisodeDetailsAssistant.prototype.adjustHeader = function() {
     var height=this.controller.get("topContent").getHeight();
     try {
@@ -266,7 +264,6 @@ EpisodeDetailsAssistant.prototype.adjustHeader = function() {
     } catch (f) {
        Mojo.Log.error("Exception adjustheader %s", f);
     }
-   
 };
 
 EpisodeDetailsAssistant.prototype.activate = function() {
@@ -284,9 +281,11 @@ EpisodeDetailsAssistant.prototype.activate = function() {
         if (Prefs.dashboardControls) {
             // throw away dashboard
         }
-
         this.mediaEvents = AppAssistant.mediaEventsService.registerForMediaEvents(this.controller, this.mediaKeyPressHandler.bind(this));
     }
+
+    DrPodder.CurrentShareURL = "http://podcasts.webosarchive.com/detail.php?url=" + encodeURIComponent(this.episodeObject.feedObject.url);
+    Mojo.Controller.getAppController().showBanner({ messageText: 'Touch2Share Ready!', icon: 'images/share.png' }, { source: 'notification' });
 };
 
 EpisodeDetailsAssistant.prototype.deactivate = function() {
@@ -312,6 +311,7 @@ EpisodeDetailsAssistant.prototype.deactivate = function() {
             this.mediaEvents = undefined;
         }
     }
+    DrPodder.CurrentShareURL = null;
 };
 
 EpisodeDetailsAssistant.prototype.cleanup = function() {
@@ -774,10 +774,10 @@ EpisodeDetailsAssistant.prototype.handleCommand = function(event) {
                             episodeTitle: this.episodeObject.title,
                             podcastURL: this.episodeObject.feedObject.url,
                             podcastTitle: this.episodeObject.feedObject.title};
-                var subject = $L({value: "Check out this podcast I found with GuttenPodder!", key: "shareEpisodeSubject"});
+                var subject = $L({value: "Check out this podcast I found with drPodder!", key: "shareEpisodeSubject"});
                 var message = $L({value: "Hi,<br/><br/>I thought you'd like to check out this nice podcast I'm enjoying in " +
                                  "<a href=\"http://www.webosarchive.com/drpodder\">drPodder Redux</a> " +
-                                 "on my webOS devive.<br/><br/>To download the episode, just use this link: " +
+                                 "on my webOS device.<br/><br/>To download the episode, just use this link: " +
                                  "<a href=\"#{episodeURL}\">#{episodeTitle}</a><br/><br/>" +
                                  "To subscribe to this podcast yourself, copy the following link and " +
                                  "paste it into your favorite Podcatcher!<br/><br/>" +
@@ -790,7 +790,7 @@ EpisodeDetailsAssistant.prototype.handleCommand = function(event) {
                 Util.banner($L({value:"Episode URL copied", key:"episodeURLCopied"}));
                 break;
             case "copyFeed-cmd":
-                this.controller.stageController.setClipboard(this.episodeObject.feedObject.url);
+                this.controller.stageController.setClipboard(DrPodder.CurrentShareURL);
                 Util.banner($L({value:"Feed URL copied", key:"feedURLCopied"}));
                 break;
             case "playExternal-cmd":

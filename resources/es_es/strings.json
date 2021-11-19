@@ -65,7 +65,7 @@
 	"sorry2": "Espero que pueda resolver tu problema. Ponte en contacto con support@drPodder.com si necesitas más ayuda.",
 	"shareEpisodeSubject": "Echa un vistazo a este podcast que encontré con drPodder!",
 	"shareEpisodeBody": "Hola,<br/><br/>Creo que te gustaría echar un vistazo a este podcast que estoy disfrutando en <a href=\"http://developer.palm.com/appredirect/?packageid=com.drnull.drpodder\">drPodder</a> con mi teléfono de Palm con WebOS!<br/><br/>Para bajar el episodio, haz click en este link: <a href=\"#{episodeURL}\">#{episodeTitle}</a><br/><br/>Para suscribirte a este podcast, simplemente copia el siguiente enlace y pégalo en tu podcatcher favorito!<br/><br/>Título del Podcast: <a href=\"#{podcastURL}\">#{podcastTitle}</a><br/>URL del Podcast:<br>#{podcastURL}<br/><br/>",
-
+	"sharePodcastBody": "Hola,<br/><br/>Creo que te gustaría echar un vistazo a este podcast que estoy disfrutando en <a href=\"http://developer.palm.com/appredirect/?packageid=com.drnull.drpodder\">drPodder</a> con mi teléfono de Palm con WebOS!<br/><br/>Para suscribirte a este podcast, simplemente copia el siguiente enlace y pégalo en tu podcatcher favorito!<br/><br/>Título del Podcast: <a href=\"#{podcastURL}\">#{podcastTitle}</a><br/>URL del Podcast:<br>#{podcastURL}<br/><br/>",
 	"playExternal": "Usar reproductor nativo",
 	"shareEpisode": "Compartir este episodio",
 	"Connecting": "Conectando",

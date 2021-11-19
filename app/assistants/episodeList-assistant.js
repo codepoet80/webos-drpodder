@@ -10,15 +10,6 @@ function EpisodeListAssistant(feedObject) {
 }
 
 EpisodeListAssistant.prototype.items = [];
-//EpisodeListAssistant.prototype.episodeModel = {items: this.feedObject.episodes};
-    // why can't we initialize this here?
-    // use this to determine if we are wifi connected, if not, then we'll NOT auto-download mp3's
-    // this.controller.serviceRequest('palm://com.palm.connectionmanager', {
-    //method: 'getStatus',
-    //parameters: {subscribe:true},
-    //onSuccess: this.onSuccessHandler,
-    //onFailure: this.onFailureHandler
-    //});
 
 EpisodeListAssistant.prototype.menuAttr = {omitDefaultItems: true};
 
@@ -122,7 +113,6 @@ EpisodeListAssistant.prototype.filterEpisodes = function() {
     this.controller.modelChanged(this.viewMenuModel);
 };
 
-
 EpisodeListAssistant.prototype.setup = function() {
     this.cmdMenuModel = {items:[]};
 
@@ -155,8 +145,11 @@ EpisodeListAssistant.prototype.setup = function() {
             {label: "dummyeditfeed", command: "edit-cmd"},
             {label: $L({value:"Mark Visible as New", key:"markVisibleNew"}), command: "unlistened-cmd"},
             {label: $L({value:"Mark Visible as Old", key:"markVisibleOld"}), command: "listened-cmd"},
+            {label: $L({value:"Share Podcast", key:"sharePodcast"}),
+            items: [{label: $L({value:"Via Email",        key:"viaEmail"      }), command: "share-cmd"},
+                    {label: $L({value:"Copy Feed URL",    key:"copyFeedURL"   }), command: "copyFeed-cmd"}]
+            },
             {label: $L({value:"Report a Problem", key:"reportProblem"}), command: "report-cmd"},
-            {label: $L("Help"), command: "help-cmd"}
         ]
     };
 
@@ -210,7 +203,6 @@ EpisodeListAssistant.prototype.setup = function() {
     
     // Setup the widget
     this.controller.setupWidget('listFilterField', attr, this.model);
-
 
     // List
     var itemTemplate ="episodeList/episodeRowTemplate";
@@ -319,9 +311,7 @@ EpisodeListAssistant.prototype.activate = function(changes) {
     Mojo.Event.listen(this.episodeList, Mojo.Event.listReorder, this.handleReorderHandler);
 //  Mojo.Event.listen(this.episodeList, Mojo.Event.hold, this.handleHoldHandler);
     Mojo.Event.listen(this.episodeList, Mojo.Event.dragStart, this.dragStartHandler);
-
 }
-
 
 EpisodeListAssistant.prototype.deactivate = function(changes) {
     this.controller.stopListening('listFilterField', Mojo.Event.filter, this.filter);
@@ -330,6 +320,7 @@ EpisodeListAssistant.prototype.deactivate = function(changes) {
     Mojo.Event.stopListening(this.episodeList, Mojo.Event.listReorder, this.handleReorderHandler);
 //  Mojo.Event.stopListening(this.episodeList, Mojo.Event.hold, this.handleHoldHandler);
     Mojo.Event.stopListening(this.episodeList, Mojo.Event.dragStart, this.dragStartHandler);
+    DrPodder.CurrentShareURL = null;
 };
 
 EpisodeListAssistant.prototype.cleanup = function(changes) {
@@ -453,6 +444,23 @@ EpisodeListAssistant.prototype.handleCommand = function(event) {
             case "filter-paused-cmd":
                 this.handleFilterCommand("paused");
                 break;
+            case "share-cmd":
+                var args = {podcastURL: this.feedObject.url,
+                            podcastTitle: this.feedObject.title};
+                var subject = $L({value: "Check out this podcast I found with drPodder!", key: "shareEpisodeSubject"});
+                var message = $L({value: "Hi,<br/><br/>I thought you'd like to check out this nice podcast I'm enjoying in " +
+                                    "<a href=\"http://www.webosarchive.com/drpodder\">drPodder Redux</a> " +
+                                    "on my webOS device.<br/><br/>" +
+                                    "To subscribe to this podcast yourself, copy the following link and " +
+                                    "paste it into your favorite Podcatcher!<br/><br/>" +
+                                    "Podcast Title: <a href=\"#{podcastURL}\">#{podcastTitle}</a><br/>" +
+                                    "Podcast URL:<br/>#{podcastURL}<br/><br/>", key: "sharePodcastBody"}).interpolate(args);
+                AppAssistant.applicationManagerService.email(subject, message);
+                break;
+            case "copyFeed-cmd":
+                this.controller.stageController.setClipboard(DrPodder.CurrentShareURL);
+                Util.banner($L({value:"Feed URL copied", key:"feedURLCopied"}));
+                break;
             case "report-cmd":
                 event.assistant = this;
                 event.data = "Feed Information:<br/>";
@@ -482,21 +490,18 @@ EpisodeListAssistant.prototype.handleCommand = function(event) {
 
 EpisodeListAssistant.prototype.handleFilterCommand = function(filter) {
     this.feedObject.viewFilter = filter;
-    Mojo.Log.error("title was: " + JSON.stringify(this.cmdMenuModel.items));
-    Mojo.Log.error("filter was: " + filter);
     this.cmdMenuModel.items[1].items[0].label = $L("View") + ": " + this.titleCaseString($L(filter));
     this.controller.modelChanged(this.cmdMenuModel);
-    Mojo.Log.error("title is: " + JSON.stringify(this.cmdMenuModel.items));
     this.filterEpisodes();
     DB.saveFeed(this.feedObject);
 };
 
 EpisodeListAssistant.prototype.titleCaseString = function(str) {
-        str = str.toLowerCase().split(' ');
-        for (var i = 0; i < str.length; i++) {
-            str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
-        }
-        return str.join(' ');
+    str = str.toLowerCase().split(' ');
+    for (var i = 0; i < str.length; i++) {
+        str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+    }
+    return str.join(' ');
 };
 
 EpisodeListAssistant.prototype.handleFeedPopup = function(value) {
@@ -558,8 +563,6 @@ EpisodeListAssistant.prototype.titleFormatter = function(title, model) {
 
 EpisodeListAssistant.prototype.pubDateFormatter = function(pubDate, model) {
     var formatted = pubDate;
-     //Mojo.Log.info("pubDate ", pubDate );
-    // Mojo.Log.info("lang ", Prefs.translation.substr(0,2) );
     if (formatted) {
         var d = formatted;
         var y = d.getFullYear();
@@ -595,6 +598,9 @@ EpisodeListAssistant.prototype.pubDateFormatter = function(pubDate, model) {
 };
 
 EpisodeListAssistant.prototype._refreshDebounced = function() {
+    DrPodder.CurrentShareURL = "http://podcasts.webosarchive.com/detail.php?url=" + encodeURIComponent(this.feedObject.url);
+    Mojo.Controller.getAppController().showBanner({ messageText: 'Touch2Share Ready!', icon: 'images/share.png' }, { source: 'notification' });
+
     this.needRefresh = true;
     if (!this.refreshedOnce) {
         this._doRefresh();
@@ -637,7 +643,6 @@ EpisodeListAssistant.prototype.handleDelete = function(event) {
     }
 };
 
-
 EpisodeListAssistant.prototype.handleReorder = function(event) {
     var fromIndex = event.fromIndex;
     var toIndex   = event.toIndex;
@@ -667,7 +672,6 @@ EpisodeListAssistant.prototype.handleReorder = function(event) {
         Util.banner("info: sorting set to 'manual'");
     }
 };
-
 
 EpisodeListAssistant.prototype.cmdItems = {
     deleteCmd     : {label: $L("Delete"), command: "delete-cmd"},

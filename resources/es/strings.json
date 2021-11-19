@@ -67,7 +67,7 @@
 	"sorry2": "Espero que pueda resolver su problema. Póngase en contacto con support@drPodder.com si necesita más ayuda.",
 	"shareEpisodeSubject": "Echa un vistazo a este podcast me encontré con drPodder!",
 	"shareEpisodeBody": "Hola,<br/><br/>Pensé que te gustaría echa un vistazo a este podcast que estoy disfrutando mucho en <a href=\"http://developer.palm.com/appredirect/?packageid=com.drnull.drpodder\">drPodder</a> en mi teléfono de Palm webOS!<br/><br/>Para bajar el episodio, haga clic en este link: <a href=\"#{episodeURL}\">#{episodeTitle}</a><br/><br/>Para suscribirse a este podcast a ti mismo, simplemente copie el siguiente enlace y pégalo en tu Podcatcher favorito!<br/><br/>Título del Podcast: <a href=\"#{podcastURL}\">#{podcastTitle}</a><br/>Podcast URL:<br>#{podcastURL}<br/><br/>",
-
+	"sharePodcastBody": "Hola,<br/><br/>Pensé que te gustaría echa un vistazo a este podcast que estoy disfrutando mucho en <a href=\"http://developer.palm.com/appredirect/?packageid=com.drnull.drpodder\">drPodder</a> en mi teléfono de Palm webOS!<br/><br/>Para suscribirse a este podcast a ti mismo, simplemente copie el siguiente enlace y pégalo en tu Podcatcher favorito!<br/><br/>Título del Podcast: <a href=\"#{podcastURL}\">#{podcastTitle}</a><br/>Podcast URL:<br>#{podcastURL}<br/><br/>",
 	"playExternal": "Tocar usando el jugador nativo",
 	"shareEpisode": "Compartir este episodio",
 	"viaEmail": "Través Email",

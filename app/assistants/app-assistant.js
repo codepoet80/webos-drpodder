@@ -44,8 +44,11 @@ AppAssistant.prototype.handleLaunch = function(launchParams) {
 		}
 	}
 	if (launchParams["sendDataToShare"]) {
-        Mojo.Log.error("Launch with Touch2Share request!");
-        this.SendDataForTouch2Share(DrPodder.CurrentShareURL);
+        Mojo.Log.info("Launch with Touch2Share request!");
+		if (DrPodder.CurrentShareURL != null)
+	        this.SendDataForTouch2Share(DrPodder.CurrentShareURL);
+		else
+			Mojo.Log.warn("Nothing to share...");
     }
 };
 
