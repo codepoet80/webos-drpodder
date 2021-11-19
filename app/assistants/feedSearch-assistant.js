@@ -16,7 +16,7 @@ wosaPodcastDirectorySearch.prototype.getProviderLabel = function () {
 }
 
 wosaPodcastDirectorySearch.prototype.search = function(keyword, callback) {
-	Mojo.Log.error("wosaPodcastDirectorySearch.search(%s)", keyword);
+	Mojo.Log.info("wosaPodcastDirectorySearch.search(%s)", keyword);
 	url = this.url.replace("{keyword}", keyword);
 	Mojo.Log.info("url: %s", url);
 
@@ -25,7 +25,7 @@ wosaPodcastDirectorySearch.prototype.search = function(keyword, callback) {
 		evalJSON : "false",
 		evalJS : "false",
 		onFailure : function(transport) {
-			Mojo.Log.error("Error contacting search service: %d", transport.status);
+			Mojo.Log.info("Error contacting search service: %d", transport.status);
 			Util.showError($L({value:"Error contacting search service", key:"errorContactingSearch"}), "HTTP Status:"+transport.status);
 		},
 		onSuccess : this.searchResults.bind(this, callback)
@@ -51,7 +51,7 @@ wosaPodcastDirectorySearch.prototype.searchResults = function(callback, transpor
 				var title = responseObj.feeds[i].title;
 				var url = responseObj.feeds[i].url;
 				if (title !== undefined && url !== undefined) {
-					results.push({title:title, url:url});
+					results.push(responseObj.feeds[i]);
 				} else {
 					Mojo.Log.warn("skipping: (%s)-[%s]", title, url);
 				}
@@ -240,17 +240,18 @@ FeedSearchAssistant.prototype.keywordChange = function(event) {
 };
 
 FeedSearchAssistant.prototype.selection = function(event) {
-	Mojo.Log.error("You clicked on: [%s], [%s], [%s]", event.item.title, event.item.url, event.originalEvent.target.className);
+	Mojo.Log.info("You clicked on: [%s], [%s], [%s]", event.item.title, event.item.url, event.originalEvent.target.className);
 	
 	if (event.originalEvent.target.className.indexOf("info-icon") != -1) { //info
         //this.handlePopupChoose(event.item, "do-complete");
-		Mojo.Log.error("User wants more info!");
+		DrPodder.PodcastDetails = event.item;
+		this.controller.stageController.pushScene({ transition: Mojo.Transition.crossFade, name: "feedDetail" });
     } else {
 		if (UseTinyFeed) {
 			Mojo.Log.info("Building " + event.item.title + " Tiny Feed with a max of " + MaxEpisodes + " for URL " + event.item.url)
 			event.item.url = this.buildURL("tiny") + "?url=" + this.base64UrlEncode(event.item.url) + "&max=" + MaxEpisodes;
 		}
-		Mojo.Log.error("Final Feed URL: " + event.item.url)
+		Mojo.Log.info("Final Feed URL: " + event.item.url)
 		this.controller.stageController.popScene({feedToAdd: event.item});
 	}
 };

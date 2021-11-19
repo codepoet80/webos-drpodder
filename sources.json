@@ -36,6 +36,8 @@
      "scenes": "dashboardPlayer"},
     {"source": "app\/assistants\/feedSearch-assistant.js",
      "scenes": "feedSearch"},
+     {"source": "app\/assistants\/feedDetail-assistant.js",
+        "scenes": "feedDetail"},
     {"source": "\/usr\/palm\/frameworks\/media\/media.js"},
     {"source": "app\/assistants\/webSearch-assistant.js",
      "scenes": "webSearch"},

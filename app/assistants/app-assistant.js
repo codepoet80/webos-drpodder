@@ -4,7 +4,9 @@ DrPodder.MainStageName = "DrPodderMain";
 DrPodder.DashboardStageName = "DrPodderDashboard";
 DrPodder.DownloadingStageName = "DrPodderDownloading";
 DrPodder.DownloadedStageName = "DrPodderDownloaded";
+DrPodder.PodcastDetails = null;
 DrPodder.UpdateCheckDone = false;
+DrPodder.CurrentShareURL = null;
 
 function AppAssistant(){
 	AppAssistant.downloadService = new DownloadService();
@@ -16,6 +18,7 @@ function AppAssistant(){
 }
 
 AppAssistant.prototype.handleLaunch = function(launchParams) {
+	Mojo.Log.info("launch params: " + JSON.stringify(launchParams))
 	if (!DB) {
 		DB = new DBClass();
 		DB.readPrefs();
@@ -40,9 +43,14 @@ AppAssistant.prototype.handleLaunch = function(launchParams) {
 			this.handleLaunchParams(launchParams);
 		}
 	}
+	if (launchParams["sendDataToShare"]) {
+        Mojo.Log.error("Launch with Touch2Share request!");
+        this.SendDataForTouch2Share(DrPodder.CurrentShareURL);
+    }
 };
 
 AppAssistant.prototype.handleLaunchParams = function(launchParams) {
+	Mojo.Log.error("handling launch params!");
 	Mojo.Log.warn("handleLaunchParams called: %s", launchParams.action);
 	var dashboardOpen            = this.controller.getStageController(DrPodder.DashboardStageName);
 	var downloadedDashboardOpen  = this.controller.getStageController(DrPodder.DownloadedStageName);
@@ -301,9 +309,35 @@ AppAssistant.prototype.handleCommand = function(event) {
 		}
 	}
 };
-/*
-AppAssistant.VideoLibrary = MojoLoader.require({
-	name: "metascene.videos",
-	version: "1.0"
-})["metascene.videos"];
-*/
+
+AppAssistant.prototype.SendDataForTouch2Share = function(url, callback) {
+    if (!url) {
+        Mojo.Log.error("Share URL not supplied");
+        return false;
+    }
+	if (callback)
+        callback = callback.bind(this);
+	var params = {data: { target: url, type: "rawdata", mimetype: "text/html" }};
+	Mojo.Log.error("Touch2Share payload is ", JSON.stringify(params));
+
+    this.shareRequest = new Mojo.Service.Request("palm://com.palm.stservice", {
+        method: "shareData",
+        parameters: params,
+		subscribe: true,
+        onSuccess: function(response) {
+            Mojo.Log.info("Touch2Share Success!", JSON.stringify(response));
+            if (callback) {
+                callback(response);
+                return true;
+            }
+        },
+        onFailure: function(response) {
+            Mojo.Log.error("Touch2Share Failure: ", JSON.stringify(response));
+            if (callback) {
+                callback(response);
+                return false;
+            }
+        }
+    });
+    return true;
+}
