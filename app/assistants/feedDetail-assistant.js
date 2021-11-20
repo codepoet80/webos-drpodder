@@ -59,7 +59,7 @@ FeedDetailAssistant.prototype.activate = function() {
     Mojo.Event.listen(this.controller.get("divPodcastTitle"), Mojo.Event.tap, this.titleTap.bind(this));
     
     DrPodder.CurrentShareURL = "http://podcasts.webosarchive.com/detail.php?id=" + encodeURIComponent(DrPodder.PodcastDetails.id);
-    Mojo.Controller.getAppController().showBanner({ messageText: 'Touch2Share Ready!', icon: 'images/share.png' }, { source: 'notification' });
+    Mojo.Controller.getAppController().showBanner({ messageText: 'Touch2Share Ready!' }, { source: 'notification' });
 };
 
 

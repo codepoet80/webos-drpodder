@@ -1,41 +1,46 @@
 <div class="palm-page-header">
     <div class="palm-page-header-wrapper">
         <div class="icon" id="icon"></div>
-        <div id="dialogTitle" class="title">Podcast Directory</div>
+        <div id="dialogTitle" class="title">Search Directory</div>
         <div x-mojo-element="Spinner" class="spinnerClass" id="spinnerLoad" name="spinnerLoad" style="float:right;margin-top:10px;margin-right:12px"></div>
     </div>
 </div>
 
 <div class="NOT-search-box">
-<div id="searchBox" class="palm-group">
-    <div id="searchBoxTitle" class="palm-group-title"><span id="searchPodcastDirectory">Search</span></div>
-    <div class="palm-list">
-         <div class="palm-row">
-            <div class="palm-row-wrapper">
-                <div id="listUseTiny" x-mojo-element="ListSelector" title="UseTiny" class="right"></div>
+    <div id="searchBox" class="palm-group">
+        <div id="searchBoxTitle" class="palm-group-title"><span id="searchPodcastDirectory">Search</span></div>
+        <div class="palm-list">
+            <div class="palm-row">
+                <div class="palm-row-wrapper">
+                    <div id="listUseTiny" x-mojo-element="ListSelector" title="UseTiny" class="right"></div>
+                </div>
             </div>
-        </div>
-        <div class="palm-row">
-            <div class="palm-row-wrapper">
-                <div id="listMaxEpisodes" x-mojo-element="ListSelector" title="MaxEpisodes" class="right"></div>
+            <div class="palm-row">
+                <div class="palm-row-wrapper">
+                    <div id="listMaxEpisodes" x-mojo-element="ListSelector" title="MaxEpisodes" class="right"></div>
+                </div>
             </div>
-        </div>
-        <div class="palm-row last">
-            <div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
-                <div class="title">
-                    <div id="keyword" class="label right">Keyword &nbsp; &nbsp;</div>
-					<div x-mojo-element="TextField" id="keywordField"></div>
-				</div>
+            <div class="palm-row last">
+                <div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+                    <div class="title">
+                        <div id="keyword" class="label right">Keyword &nbsp; &nbsp;</div>
+                        <div x-mojo-element="TextField" id="keywordField"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-</div>
+
 <div id="searchBoxSpacer"></div>
 
-<div id="feedSearchList" x-mojo-element="List"></div>
+<div class="palm-group" id="divResultsList" style="display:none;">
+    <div class="palm-group-title"><span x-mojo-loc='' id="spnResultsTitle">Results</span></div>
+    <div id="feedSearchList" x-mojo-element="List" style="padding: 1px;margin:-12px -18px -12px -18px;"></div>
+</div>
+
 
 <div class="explanation-text" style="text-align: center;">
     <img src="images/directory.png" style="height:32px; width:32px;"><br/>
-    Results provided by: webOS Archive <a href="http://podcasts.webosarchive.com">Podcast Directory</a>
+    Results provided by: <br/>webOS Archive <a href="http://podcasts.webosarchive.com">Podcast Directory</a>
 </div>

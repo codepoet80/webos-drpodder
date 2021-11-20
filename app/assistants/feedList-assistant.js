@@ -24,7 +24,7 @@ FeedListAssistant.prototype.appMenuModel = {
 
 FeedListAssistant.prototype.addMenuModel = {
     items: [{label: $L({value:"Add Feed URL", key:"enterFeedURL"}), command: "add-feed"},
-            {label: $L({value:"Search Directory", key:"searchDirectory"}), command: "feed-search"},
+            {label: $L({value:"Search Directory", key:"searchDirectory"}), iconPath: "images/directory-menu.png", command: "feed-search"},
             {label: $L({value:"Add Default Feeds", key:"addDefaultFeeds"}), command: "addDefault-cmd"},
             {label: $L({value:"Add Local Media", key:"addLocalMedia"}), command: "add-local"},
             {label: $L({value:"Dynamic Playlist", key:"dynamicPlaylist"}), command: "add-playlist"},

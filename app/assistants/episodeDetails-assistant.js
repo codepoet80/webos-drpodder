@@ -43,7 +43,8 @@ EpisodeDetailsAssistant.prototype.menuModel = {
                  {label: $L({value:"1 hour",            key:"1h"       }), command: "sleeptimer-3600-cmd"}]
         },
         {label: $L({value:"Share Episode", key:"shareEpisode"}),
-         items: [{label: $L({value:"Via Email",        key:"viaEmail"      }), command: "share-cmd"},
+         items: [{label: "Touch2Share Ready", disabled:true, command:"share-cmd" },
+                 {label: $L({value:"Email Links",        key:"viaEmail"      }), command: "share-cmd"},
                  {label: $L({value:"Copy Episode URL", key:"copyEpisodeURL"}), command: "copyEpisode-cmd"},
                  {label: $L({value:"Copy Feed URL",    key:"copyFeedURL"   }), command: "copyFeed-cmd"}]
         },
@@ -285,12 +286,9 @@ EpisodeDetailsAssistant.prototype.activate = function() {
     }
 
     DrPodder.CurrentShareURL = "http://podcasts.webosarchive.com/detail.php?url=" + encodeURIComponent(this.episodeObject.feedObject.url);
-    Mojo.Controller.getAppController().showBanner({ messageText: 'Touch2Share Ready!', icon: 'images/share.png' }, { source: 'notification' });
 };
 
 EpisodeDetailsAssistant.prototype.deactivate = function() {
-
-    Mojo.Log.error("*** Event notice: doing deactivate");
 
     Mojo.Event.stopListening(this.backElement, Mojo.Event.tap, this.backTapHandler);
     Mojo.Event.stopListening(this.controller.get("episodeDetailsTitle"), Mojo.Event.tap, this.titleTapHandler);

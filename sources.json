@@ -10,6 +10,7 @@
     {"source": "javascript\/applicationManager-service.js"},
     {"source": "javascript\/power-service.js"},
     {"source": "javascript\/wifi-service.js"},
+    {"source": "javascript\/share-service.js"},
     {"source": "app\/assistants\/feedList-assistant.js",
      "scenes": "feedList"},
     {"source": "app\/assistants\/addFeed-assistant.js",
@@ -45,6 +46,8 @@
     {"source": "app\/common\/common.js"},
     {"source": "app\/common\/dialog.js"},
     {"source": "app\/models\/device.js"},
+    {"source": "app\/models\/shareservice-model.js"},
+    {"source": "app\/models\/directoryservice-model.js"},
     {"source": "app\/models\/asyncWrappers.js"},
     { "source": "app\/models\/updater-model.js" }
 ]

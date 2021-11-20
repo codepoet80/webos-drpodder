@@ -1,75 +1,12 @@
-
-var LastSearchService = "wosaPodcastDirectorySearch";
 var LastSearchKeyword = "";
 var UseTinyFeed = true;
 var MaxEpisodes = 25;
-var directoryURLBase = "http://podcasts.webosarchive.com/";
-
-function wosaPodcastDirectorySearch() {
-
-}
-wosaPodcastDirectorySearch.prototype.url = directoryURLBase + "/search.php?q={keyword}&max=50";
-wosaPodcastDirectorySearch.providerLabel = "powered by <a href='http://www.webosarchive.com'>webOS Archive</a>";
-
-wosaPodcastDirectorySearch.prototype.getProviderLabel = function () {
-	return this.providerLabel;
-}
-
-wosaPodcastDirectorySearch.prototype.search = function(keyword, callback) {
-	Mojo.Log.info("wosaPodcastDirectorySearch.search(%s)", keyword);
-	url = this.url.replace("{keyword}", keyword);
-	Mojo.Log.info("url: %s", url);
-
-	var request = new Ajax.Request(url, {
-		method : "get",
-		evalJSON : "false",
-		evalJS : "false",
-		onFailure : function(transport) {
-			Mojo.Log.info("Error contacting search service: %d", transport.status);
-			Util.showError($L({value:"Error contacting search service", key:"errorContactingSearch"}), "HTTP Status:"+transport.status);
-		},
-		onSuccess : this.searchResults.bind(this, callback)
-	});
-};
-
-wosaPodcastDirectorySearch.prototype.searchResults = function(callback, transport) {
-	var results = [];
-	if (!transport || transport.status === 0 || transport.status < 200 || transport.status > 299) {
-		Mojo.Log.error("Error contacting search service: %d", transport.status);
-		Util.showError($L({value:"Error contacting search service", key:"errorContactingSearch"}), "HTTP Status:"+transport.status);
-		return;
-	}
-
-	var responseObj = JSON.parse(transport.responseText);
-	if (responseObj.status == "error") {
-		Mojo.Log.error("Error message from server while searching for Podcasts: " + responseObj.msg);
-		Util.showError($L({value:"Error contacting search service", key:"errorContactingSearch"}), "The server responded to the search request with: " + responseObj.msg.replace("ERROR: ", ""));
-	} else {
-		if (responseObj.feeds && responseObj.feeds.length > 0) {
-
-			for (var i = 0; i < responseObj.feeds.length; i++) {
-				var title = responseObj.feeds[i].title;
-				var url = responseObj.feeds[i].url;
-				if (title !== undefined && url !== undefined) {
-					results.push(responseObj.feeds[i]);
-				} else {
-					Mojo.Log.warn("skipping: (%s)-[%s]", title, url);
-				}
-			}
-		} else {
-			Mojo.Log.error("Search results were empty. Either there was no matching result, or there were server or connectivity problems.");
-			Util.showError("No results", "The server did not report any matches for the search.");
-		}
-	}
-	Mojo.Log.info("Finished processing search results for wOSA Podcast Directory with " + results.length + " results");
-
-	callback(results);
-};
+var shareServiceModel = null;
 
 function FeedSearchAssistant() {
 	this.searchService = "wosaPodcastDirectorySearch";
-	this.searchServices = {"wosaPodcastDirectorySearch": new wosaPodcastDirectorySearch()
-	};
+	this.searchServices = {"wosaPodcastDirectorySearch": new wosaPodcastDirectorySearch()};
+	shareServiceModel = new ShareServiceModel();
 }
 
 FeedSearchAssistant.prototype.setup = function() {
@@ -183,6 +120,7 @@ FeedSearchAssistant.prototype.activate = function() {
 
 	//TODO: list box changes
 	this.focusChanges = Mojo.Event.listenForFocusChanges(this.keywordField, this.focusChangeHandler);
+	this.getUserRecommendations();
 };
 
 FeedSearchAssistant.prototype.deactivate = function() {
@@ -194,8 +132,7 @@ FeedSearchAssistant.prototype.deactivate = function() {
 FeedSearchAssistant.prototype.cleanup = function() {
 };
 
-FeedSearchAssistant.prototype.focusChange = function(event) {
-	
+FeedSearchAssistant.prototype.focusChange = function(event) {	
 };
 
 FeedSearchAssistant.prototype.handleValueChange = function(event) {
@@ -213,29 +150,37 @@ FeedSearchAssistant.prototype.handleValueChange = function(event) {
 };
 
 FeedSearchAssistant.prototype.keywordChange = function(event) {
-	this.searchService = LastSearchService;
 	LastSearchKeyword = event.value;
 
 	if (event.originalEvent && event.originalEvent.keyCode === Mojo.Char.enter) {
 		this.keywordField.mojo.blur();
+		this.controller.get("divResultsList").style.display = "none";
+		this.controller.get("spnResultsTitle").innerHTML = "Search Results";
+
 		var ss = this.searchServices[this.searchService];
 		this.controller.get('spinnerLoad').mojo.start();
 
 		this.listModel.items = [];
 		this.controller.modelChanged(this.listModel);
 
-		ss.search(event.value, function(results) {
-			this.controller.get('spinnerLoad').mojo.stop();
-			var numFeeds = results.length;
-			this.listModel.items = results;
+		if (event.value != "") {
+			ss.search(event.value, function(results) {
+				this.controller.get('spinnerLoad').mojo.stop();
 
-			if (numFeeds > 0) {
-				this.controller.modelChanged(this.listModel);
-				this.keywordField.mojo.blur();
-			} else {
-				Util.showError($L({value:"No Results Found", key:"noResults"}), $L({value:"Please try a different keyword, or ask the service provider to add your feed.", key:"tryDifferentKeyword"}));
-			}
-		}.bind(this));
+				var numFeeds = results.length;
+				this.listModel.items = results;
+
+				if (numFeeds > 0) {
+					this.controller.get("divResultsList").style.display = "block";
+					this.controller.modelChanged(this.listModel);
+					this.keywordField.mojo.blur();
+				} else {
+					Util.showError($L({value:"No Results Found", key:"noResults"}), $L({value:"Please try a different keyword, or ask the service provider to add your feed.", key:"tryDifferentKeyword"}));
+				}
+			}.bind(this));
+		} else {
+			this.getUserRecommendations();
+		}
 	}
 };
 
@@ -260,6 +205,37 @@ FeedSearchAssistant.prototype.backTap = function(event)
 {
 	this.controller.stageController.popScene();
 };
+
+FeedSearchAssistant.prototype.getUserRecommendations = function() {
+    Mojo.Log.info("Getting User Recommendations from Sharing Service...");
+	this.controller.get('spinnerLoad').mojo.start();
+	this.controller.get("divResultsList").style.display = "none";
+    shareServiceModel.DoShareListRequest(function(response) {
+        try {
+            var responseObj = JSON.parse(response);
+            if (responseObj.shares) {
+                var sharedItems = [];
+                for (var i = 0; i < responseObj.shares.length; i++) {
+                    //Mojo.Log.info("shared item: " + JSON.stringify(responseObj.shares[i]));
+                    if (responseObj.shares[i].content)
+                        sharedItems.push(responseObj.shares[i].content)
+                }
+				if (sharedItems.length > 0) {
+					this.controller.get('spinnerLoad').mojo.stop();
+					this.controller.get("spnResultsTitle").innerHTML = "Recommended by webOS Users";
+					this.controller.get("divResultsList").style.display = "block";
+
+					this.listModel.items = sharedItems;
+					this.controller.modelChanged(this.listModel);
+				}
+            } else {
+                throw ("No items shared");
+            }
+        } catch (ex) {
+            Mojo.Log.warn("Shared recommendation list was empty or could not be loaded: " + ex);
+        }
+    }.bind(this));
+}
 
 FeedSearchAssistant.prototype.buildURL = function(actionType) {
     var urlBase = directoryURLBase;

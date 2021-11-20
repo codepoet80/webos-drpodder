@@ -1,10 +1,9 @@
-
+var shareServiceModel = null;
 function EpisodeListAssistant(feedObject) {
     this.feedObject = feedObject;
     this.episodeModel = {items: []};
-
     this.feedTitleFilterExp = "";
-
+    shareServiceModel = new ShareServiceModel();
     this.appController = Mojo.Controller.getAppController();
     this.stageController = this.appController.getStageController(DrPodder.MainStageName);
 }
@@ -28,6 +27,11 @@ EpisodeListAssistant.prototype.filterMenuModel = {
 };
 
 EpisodeListAssistant.prototype.viewMenuModel = {
+    visible: true,
+    items: []
+};
+
+EpisodeListAssistant.prototype.menuModel = {
     visible: true,
     items: []
 };
@@ -146,7 +150,9 @@ EpisodeListAssistant.prototype.setup = function() {
             {label: $L({value:"Mark Visible as New", key:"markVisibleNew"}), command: "unlistened-cmd"},
             {label: $L({value:"Mark Visible as Old", key:"markVisibleOld"}), command: "listened-cmd"},
             {label: $L({value:"Share Podcast", key:"sharePodcast"}),
-            items: [{label: $L({value:"Via Email",        key:"viaEmail"      }), command: "share-cmd"},
+            items: [{label: "Touch2Share Ready", disabled:true, command:"share-cmd" },
+                    {label: "Recommend", iconPath:"images/share-menu.png", command: "sharespace-cmd"},
+                    {label: $L({value:"Email Links",        key:"viaEmail"      }), command: "share-cmd"},
                     {label: $L({value:"Copy Feed URL",    key:"copyFeedURL"   }), command: "copyFeed-cmd"}]
             },
             {label: $L({value:"Report a Problem", key:"reportProblem"}), command: "report-cmd"},
@@ -422,7 +428,6 @@ EpisodeListAssistant.prototype.handleCommand = function(event) {
             case "filter-new-cmd":
                 this.handleFilterCommand("New");
                 break;
- 
             case "filter-downloadednew-cmd":
                 this.handleFilterCommand("downloaded & new");
                 break;
@@ -443,6 +448,21 @@ EpisodeListAssistant.prototype.handleCommand = function(event) {
                 break;
             case "filter-paused-cmd":
                 this.handleFilterCommand("paused");
+                break;
+            case "sharespace-cmd":
+                this.controller.showAlertDialog({
+                    onChoose: function(value) {
+                        if (value == "yes") {
+                            this.getPodcastDetailsAndShare(this.feedObject.url);
+                        }
+                    },
+                    title: "webOS Sharing Service",
+                    message: "This will share the selected podcast with all other webOS users. Do you want to proceed?",
+                    choices: [
+                        { label: "Share", value: "yes", type: "affirmative" },
+                        { label: "Cancel", value: "no", type: "negative" }
+                    ]
+                });
                 break;
             case "share-cmd":
                 var args = {podcastURL: this.feedObject.url,
@@ -599,12 +619,26 @@ EpisodeListAssistant.prototype.pubDateFormatter = function(pubDate, model) {
 
 EpisodeListAssistant.prototype._refreshDebounced = function() {
     DrPodder.CurrentShareURL = "http://podcasts.webosarchive.com/detail.php?url=" + encodeURIComponent(this.feedObject.url);
-    Mojo.Controller.getAppController().showBanner({ messageText: 'Touch2Share Ready!', icon: 'images/share.png' }, { source: 'notification' });
 
     this.needRefresh = true;
     if (!this.refreshedOnce) {
         this._doRefresh();
         this.refreshedOnce = true;
+    }
+    if (this.feedObject.title.toLowerCase() == "all") {
+        //Disable Share Menu Options for "All" podcasts
+        this.menuModel.items[3].items[0].label = "Touch2Share Unavailable";
+        this.menuModel.items[3].items[1].disabled = true;
+        this.menuModel.items[3].items[2].disabled = true;
+        this.menuModel.items[3].items[3].disabled = true;
+        this.controller.modelChanged(this.menuModel);
+    } else {
+        //Enable Share Menu Options for Individual podcasts
+        this.menuModel.items[3].items[0].label = "Touch2Share Ready";
+        this.menuModel.items[3].items[1].disabled = false;
+        this.menuModel.items[3].items[2].disabled = false;
+        this.menuModel.items[3].items[3].disabled = false;
+        this.controller.modelChanged(this.menuModel);
     }
 };
 
@@ -893,3 +927,16 @@ EpisodeListAssistant.prototype.considerForNotification = function(params) {
         }
     }
 };
+
+EpisodeListAssistant.prototype.getPodcastDetailsAndShare = function(url) {
+    this.searchService = "wosaPodcastDirectorySearch";
+	this.searchServices = {"wosaPodcastDirectorySearch": new wosaPodcastDirectorySearch()};
+    var ss = this.searchServices[this.searchService];
+    ss.getDetail(url, function(result) {
+        shareServiceModel.DoShareAddRequest(JSON.stringify(result), "application/json", function(response) {
+            if (response) {
+                Mojo.Controller.getAppController().showBanner({ messageText: "Podcast shared!" }, "notifications", "");
+            }
+        }.bind(this));
+    }.bind(this))
+}
