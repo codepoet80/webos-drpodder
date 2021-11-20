@@ -284,8 +284,11 @@ EpisodeDetailsAssistant.prototype.activate = function() {
         }
         this.mediaEvents = AppAssistant.mediaEventsService.registerForMediaEvents(this.controller, this.mediaKeyPressHandler.bind(this));
     }
-
-    DrPodder.CurrentShareURL = "http://podcasts.webosarchive.com/detail.php?url=" + encodeURIComponent(this.episodeObject.feedObject.url);
+    //Try to share the MP3 itself, fallback to podcast detail page
+    if (this.episodeObject.enclosure && this.episodeObject.enclosure != "")
+        DrPodder.CurrentShareURL = this.episodeObject.enclosure;
+    else
+        DrPodder.CurrentShareURL = "http://podcasts.webosarchive.com/detail.php?url=" + encodeURIComponent(this.episodeObject.feedObject.url);
 };
 
 EpisodeDetailsAssistant.prototype.deactivate = function() {
@@ -1108,4 +1111,3 @@ EpisodeDetailsAssistant.prototype.considerForNotification = function(params) {
         }
     }
 };
-
