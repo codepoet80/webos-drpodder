@@ -41,6 +41,9 @@ UpdaterModel.prototype.PromptUserForUpdate = function(callback, message) {
         if (!message)
             message = "An update for " + Mojo.Controller.appInfo.title + " was found in App Museum II:<br>" + this.lastUpdateResponse.versionNote + "<br>Do you want to update now?";
 
+        if (callback)   // set scope for xmlhttp anonymous function callback
+            callBack = callback.bind(this);
+
         var stageController = Mojo.Controller.getAppController().getActiveStageController();
         if (stageController) {
             this.controller = stageController.activeScene();
@@ -52,8 +55,8 @@ UpdaterModel.prototype.PromptUserForUpdate = function(callback, message) {
                     } else {
                         Mojo.Log.info("User deferred update.");
                     }
-                    if (callback)
-                        callback(value);
+                    if (callBack)
+                        callBack(value);
                 },
                 allowHTMLMessage: true,
                 title: $L("Update Available!"),
@@ -68,7 +71,7 @@ UpdaterModel.prototype.PromptUserForUpdate = function(callback, message) {
 }
 
 //Ask Preware to actually install the update...
-UpdaterModel.prototype.InstallUpdate = function(callBack) {
+UpdaterModel.prototype.InstallUpdate = function() {
     if (!this.lastUpdateResponse) {
         Mojo.Log.warn("UpdaterModel: Not performing update when no update has been discovered.");
     } else {
@@ -80,7 +83,7 @@ UpdaterModel.prototype.InstallUpdate = function(callBack) {
     }
 }
 
-UpdaterModel.prototype.InstallViaPreware = function(app, callback) {
+UpdaterModel.prototype.InstallViaPreware = function(app) {
     //Ask webOS to launch the video player with the new url
     this.prewareRequest = new Mojo.Service.Request("palm://com.palm.applicationManager", {
         method: "open",
@@ -90,11 +93,9 @@ UpdaterModel.prototype.InstallViaPreware = function(app, callback) {
         },
         onSuccess: function(response) {
             Mojo.Log.info("Preware launch success", JSON.stringify(response));
-            callback(true)
         }.bind(this),
         onFailure: function(response) {
             Mojo.Log.error("Preware launch failure, " + app + ":", JSON.stringify(response), response.errorText);
-            callback(false);
         }.bind(this)
     });
 }
@@ -136,7 +137,7 @@ UpdaterModel.prototype.performIdentifiedUpdateCheck = function(appName, currVers
             } else {
                 Mojo.Log.info("UpdaterModel: No useable response from App Museum II update API");
             }
-            if (callback) {
+            if (callBack) {
                 callBack(updateResponse);
             }
         }
