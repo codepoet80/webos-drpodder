@@ -153,8 +153,11 @@ EpisodeDetailsAssistant.prototype.setup = function() {
             if (!this.isForeground) {
                 this.player.showDashboard(this.controller.stageController);
             }
-            //this.audioExt = this.libs.mediaextension.MediaExtension.getInstance(this.audioObject);
-            //this.audioExt.audioClass = Media.AudioClass.MEDIA;
+            Mojo.Log.info("Loading Mojo media extension");
+            this.libs = MojoLoader.require({ name: "mediaextension", version: "1.0"});
+            this.audioExt = this.libs.mediaextension.MediaExtension.getInstance(this.audioObject);
+            this.audioExt.audioClass = "media";     //this.audioExt.audioClass = Media.AudioClass.MEDIA;
+            Mojo.Log.error("Loaded Mojo media extension");
 
             //this.audioObject.addEventListener(Media.Event.PROGRESS, this.updateProgress.bind(this));
             //this.audioObject.addEventListener(Media.Event.DURATIONCHANGE, this.updateProgress.bind(this));
