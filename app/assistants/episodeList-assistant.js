@@ -17,11 +17,11 @@ EpisodeListAssistant.prototype.filterMenuModel = {
         {label: $L("ALL"), command: "filter-all-cmd"},
         {label: $L("New"), command: "filter-new-cmd"},
         {label: $L("Old"), command: "filter-old-cmd"},
-        {label: $L("Undownloaded & New"), command: "filter-notdownloadednew-cmd"},
+        {label: $L("Downloaded"), command: "filter-downloaded-cmd"},
         {label: $L("Downloaded & New"), command: "filter-downloadednew-cmd"},
         {label: $L("Downloaded & Old"), command: "filter-downloadedold-cmd"},
-        {label: $L("Downloaded"), command: "filter-downloaded-cmd"},
         {label: $L("Downloading"), command: "filter-downloading-cmd"},
+        {label: $L("Undownloaded & New"), command: "filter-notdownloadednew-cmd"},
         {label: $L("Paused"), command: "filter-paused-cmd"}
     ]
 };
@@ -514,6 +514,7 @@ EpisodeListAssistant.prototype.handleFilterCommand = function(filter) {
     this.controller.modelChanged(this.cmdMenuModel);
     this.filterEpisodes();
     DB.saveFeed(this.feedObject);
+    this.controller.getSceneScroller().mojo.scrollTo(0, 0, true);
 };
 
 EpisodeListAssistant.prototype.titleCaseString = function(str) {
