@@ -147,7 +147,6 @@ EpisodeDetailsAssistant.prototype.setup = function() {
         this.controller.setupWidget(Mojo.Menu.commandMenu, this.handleCommand, this.cmdMenuModel);
         if (!this.isVideo()) {
 
-            //this.libs = MojoLoader.require({ name: "mediaextension", version: "1.0"});
             this.audioObject = this.controller.get('audioTag');
             this.player = new Player(this.audioObject, this.episodeObject);
             if (!this.isForeground) {
