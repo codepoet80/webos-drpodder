@@ -5,6 +5,8 @@ DrPodder.DashboardStageName = "DrPodderDashboard";
 DrPodder.DownloadingStageName = "DrPodderDownloading";
 DrPodder.DownloadedStageName = "DrPodderDownloaded";
 DrPodder.PodcastDetails = null;
+DrPodder.PodcastSearchText = null;
+DrPodder.PodcastSearchResults = null;
 DrPodder.UpdateCheckDone = false;
 DrPodder.CurrentShareURL = null;
 

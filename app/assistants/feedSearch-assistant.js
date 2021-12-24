@@ -76,7 +76,7 @@ FeedSearchAssistant.prototype.setup = function() {
 			enterSubmits : true,
 			changeOnKeyPress : true
 		},
-		this.keywordModel = { value : LastSearchKeyword});
+		this.keywordModel = { value : LastSearchKeyword || DrPodder.PodcastSearchText });
 
 	this.keywordField = this.controller.get("keywordField");
 	this.keywordChangeHandler = this.keywordChange.bind(this);
@@ -120,7 +120,11 @@ FeedSearchAssistant.prototype.activate = function() {
 
 	//TODO: list box changes
 	this.focusChanges = Mojo.Event.listenForFocusChanges(this.keywordField, this.focusChangeHandler);
-	this.getUserRecommendations();
+	if (DrPodder.PodcastSearchText != null && DrPodder.PodcastSearchResults != null) {
+		this.showPreviousSearchResults(DrPodder.PodcastSearchResults);
+	} else {
+		this.getUserRecommendations();
+	}
 };
 
 FeedSearchAssistant.prototype.deactivate = function() {
@@ -164,11 +168,13 @@ FeedSearchAssistant.prototype.keywordChange = function(event) {
 		this.controller.modelChanged(this.listModel);
 
 		if (event.value != "") {
+			DrPodder.PodcastSearchText = event.value;
 			ss.search(event.value, function(results) {
 				this.controller.get('spinnerLoad').mojo.stop();
 
 				var numFeeds = results.length;
 				this.listModel.items = results;
+				DrPodder.PodcastSearchResults = results;
 
 				if (numFeeds > 0) {
 					this.controller.get("divResultsList").style.display = "block";
@@ -196,7 +202,10 @@ FeedSearchAssistant.prototype.selection = function(event) {
 			Mojo.Log.info("Building " + event.item.title + " Tiny Feed with a max of " + MaxEpisodes + " for URL " + event.item.url)
 			event.item.url = this.buildURL("tiny") + "?url=" + this.base64UrlEncode(event.item.url) + "&max=" + MaxEpisodes;
 		}
-		Mojo.Log.info("Final Feed URL: " + event.item.url)
+		Mojo.Log.info("Final Feed URL: " + event.item.url);
+		DrPodder.PodcastSearchText = null;
+		DrPodder.PodcastSearchResults = null;
+		LastSearchKeyword = null;
 		this.controller.stageController.popScene({feedToAdd: event.item});
 	}
 };
@@ -204,6 +213,9 @@ FeedSearchAssistant.prototype.selection = function(event) {
 FeedSearchAssistant.prototype.backTap = function(event)
 {
 	this.controller.stageController.popScene();
+	DrPodder.PodcastSearchText = null;
+	DrPodder.PodcastSearchResults = null;
+	LastSearchKeyword = null;
 };
 
 FeedSearchAssistant.prototype.getUserRecommendations = function() {
@@ -235,6 +247,11 @@ FeedSearchAssistant.prototype.getUserRecommendations = function() {
             Mojo.Log.warn("Shared recommendation list was empty or could not be loaded: " + ex);
         }
     }.bind(this));
+}
+
+FeedSearchAssistant.prototype.showPreviousSearchResults = function(results) {
+	this.listModel.items = results;
+	this.controller.modelChanged(this.listModel);
 }
 
 FeedSearchAssistant.prototype.buildURL = function(actionType) {
