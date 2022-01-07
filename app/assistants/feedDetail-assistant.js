@@ -54,7 +54,6 @@ FeedDetailAssistant.prototype.activate = function() {
     }
     /* put in event handlers here that should only be in effect when this scene is active. For
        example, key handlers that are observing the document */
-    Mojo.Event.listen(this.controller.get("divPodcastTitle"), Mojo.Event.tap, this.titleTap.bind(this));
     
     DrPodder.CurrentShareURL = "http://podcasts.webosarchive.com/detail.php?id=" + encodeURIComponent(DrPodder.PodcastDetails.id);
     Mojo.Controller.getAppController().showBanner({ messageText: 'Touch2Share Ready!' }, { source: 'notification' });
@@ -103,13 +102,3 @@ FeedDetailAssistant.prototype.base64UrlEncode = function(url) {
     url = url.replace(/\//g, "_");
     return url;
 }
-
-FeedDetailAssistant.prototype.titleTap = function() {
-    this.header = this.controller.get("divHeader");
-    Mojo.Log.error("classname: " + this.header.className);
-    if (this.header.className.indexOf("multi-line") == -1) {
-        this.header.addClassName("multi-line");
-    } else {
-        this.header.removeClassName("multi-line");
-    }
-};

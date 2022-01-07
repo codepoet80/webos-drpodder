@@ -94,7 +94,7 @@ EpisodeDetailsAssistant.prototype.setup = function() {
     this.statusDiv = this.controller.get("statusDiv");
     this.statusDiv.hide();
     this.setStatus('Setup');
-    this.controller.getSceneScroller().mojo.setMode("dominant");
+    //this.controller.getSceneScroller().mojo.setMode("dominant");
 
     this.controller.update(this.episodeDetailsTitle, this.episodeObject.title);
 
@@ -131,7 +131,12 @@ EpisodeDetailsAssistant.prototype.setup = function() {
 
     }.bind(this));
 
-    Mojo.Log.error("episode art: " + this.episodeObject.feedObject.albumArt);
+    this.controller.setupWidget("scrollerDetail",
+        this.attributes = {
+            mode: 'vertical'
+        }
+    ); 
+
     this.controller.get("episodeAlbumArt").src = "/media/internal/" + this.episodeObject.feedObject.albumArt;
 
     this.progressModel.value = 0;
@@ -161,7 +166,7 @@ EpisodeDetailsAssistant.prototype.setup = function() {
             this.libs = MojoLoader.require({ name: "mediaextension", version: "1.0"});
             this.audioExt = this.libs.mediaextension.MediaExtension.getInstance(this.audioObject);
             this.audioExt.audioClass = "media";     //this.audioExt.audioClass = Media.AudioClass.MEDIA;
-            Mojo.Log.error("Loaded Mojo media extension");
+            Mojo.Log.info("Loaded Mojo media extension");
 
             //this.audioObject.addEventListener(Media.Event.PROGRESS, this.updateProgress.bind(this));
             //this.audioObject.addEventListener(Media.Event.DURATIONCHANGE, this.updateProgress.bind(this));
@@ -268,14 +273,16 @@ EpisodeDetailsAssistant.prototype.adjustHeader = function() {
     var height=this.controller.get("topContent").getHeight() + 8;
     try {
        this.controller.get("topSpacer").style.height = height + 'px';
-       this.controller.get("descriptionFade").style.top = height + 'px';
+       //this.controller.get("descriptionFade").style.top = height + 'px';
     } catch (f) {
        Mojo.Log.error("Exception adjustheader %s", f);
     }
+    this.controller.get("scrollerDetail").style.height = (this.controller.window.innerHeight - height) + "px";
 };
 
 EpisodeDetailsAssistant.prototype.activate = function() {
     this.adjustHeader();
+
     this.isForeground = true;
     Mojo.Log.info("EpisodeDetails.activate isForeground = true");
     Mojo.Event.listen(this.controller.get("episodeDetailsTitle"), Mojo.Event.tap, this.titleTapHandler);
@@ -323,8 +330,6 @@ EpisodeDetailsAssistant.prototype.deactivate = function() {
 };
 
 EpisodeDetailsAssistant.prototype.cleanup = function() {
-
-    Mojo.Log.error("*** Event notice: doing cleanup");
 
     this.sleepTimerStop(); 
     this.setTimer(false);
@@ -1025,13 +1030,13 @@ EpisodeDetailsAssistant.prototype.playExternal = function() {
 
 EpisodeDetailsAssistant.prototype.titleTap = function() {
     if (this.progressInfoHidden) {
-        this.header.addClassName("multi-line");
+        //this.header.addClassName("multi-line");      -JW removed because its not theme friendly 
         this.progressInfo.show();
         this.updateProgress();
         this.progressInfoHidden = false;
         this.adjustHeader();
     } else {
-        this.header.removeClassName("multi-line");
+        //this.header.removeClassName("multi-line");    -JW removed because its not theme friendly    
         this.progressInfo.hide();
         this.progressInfoHidden = true;
         this.adjustHeader();
