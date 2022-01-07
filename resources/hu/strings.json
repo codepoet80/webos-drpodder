@@ -216,5 +216,12 @@
 	"parseFeedErrorDetail": "A következő feed neve nem található: ",
 	"parseJSONError": "Nem sikerült beolvasni a JSON feedet",
 	"parseJSONErrorDetail": "A következő JSON feed neve nem található: ",
-	"downloadsPendingWifi": "A letöltés wifire várakozik"
+	"downloadsPendingWifi": "A letöltés wifire várakozik",
+	"theme": "Téma",
+	"themeLight": "Világos",
+	"themeDark": "Sötét",
+	"themeSystem": "Alapértelmezett",
+	"allowLandscape": "Elforgatás engedélyezése",
+	"importClipDrpodder": "Másolás a vágólapról",
+	"exportClipDrpodder": "Másolás a vágólapra"
 }
