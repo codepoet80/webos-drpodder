@@ -80,7 +80,7 @@
 	"feedURLCopied": "Feed URL másolva",
 	"Connecting": "Csatlakozás",
 	"Loading": "Megnyitás",
-	"Seeking": "Seeking",
+	"Seeking": "Pörgetés",
 	"Buffering": "Betöltés",
 	"Error": "Hiba",
 	"errorPlaying": "Hiba lépett fel a file lejátszása közben.",
@@ -181,7 +181,7 @@
 	"latinoSpanish": "Latino spanyol",
 	"Klingon": "Klingon",
 	"French": "Francia",
-	"None": "None",
+	"None": "Kiválasztás",
 	"zoomFade": "Zoom átmenet",
 	"crossFade": "Cross átmenet",
 	"restartRequired": "Újraindítás szükséges",
@@ -216,5 +216,12 @@
 	"parseFeedErrorDetail": "A következő feed neve nem található: ",
 	"parseJSONError": "Nem sikerült beolvasni a JSON feedet",
 	"parseJSONErrorDetail": "A következő JSON feed neve nem található: ",
-	"downloadsPendingWifi": "A letöltés wifire várakozik"
+	"downloadsPendingWifi": "A letöltés wifire várakozik",
+	"theme": "Téma",
+	"themeLight": "Világos",
+	"themeDark": "Sötét",
+	"themeSystem": "Alapértelmezett",
+	"allowLandscape": "Elforgatás engedélyezése",
+	"importClipDrpodder": "Másolás a vágólapról",
+	"exportClipDrpodder": "Másolás a vágólapra"
 }
