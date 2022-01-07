@@ -49,5 +49,6 @@
     {"source": "app\/models\/shareservice-model.js"},
     {"source": "app\/models\/directoryservice-model.js"},
     {"source": "app\/models\/asyncWrappers.js"},
+    { "source": "app\/models\/system-model.js" },
     { "source": "app\/models\/updater-model.js" }
 ]

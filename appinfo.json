@@ -13,7 +13,7 @@
   "icon":"icon.png",
   "miniicon":"miniicon.png",
   "type":"web",
-  "theme":"light",
+
   "noWindow":true,
   "noDeprecatedStyles":true,
   "tapToShareSupported": true,

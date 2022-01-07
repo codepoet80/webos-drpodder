@@ -9,6 +9,8 @@ LoadingAssistant.prototype.setup = function() {
 	//this.controller.setupWidget("loadingSpinner", {spinnerSize: "small"}, this.spinnerModel);
 	//this.spinnerModel.spinning = true;
 	//this.loadingSpinner = this.controller.get("loadingSpinner");
+	Util.setThemePreference(this.controller);
+	
 	this.spinnerScrim = this.controller.get("spinnerScrim");
 	this.controller.get("versionDiv").update("v"+Mojo.Controller.appInfo.version);
 	this.titleDiv = this.controller.get("titleDiv");

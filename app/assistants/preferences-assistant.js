@@ -268,9 +268,7 @@ PreferencesAssistant.prototype.freeRotation = function(event) {
 PreferencesAssistant.prototype.themePreference = function(event) {
     Mojo.Log.info("Setting theme to: " + event.value);
     Prefs.themePreference = event.value;
-    if (Prefs.themePreference != "system-theme") {
-        this.controller.document.body.className = Prefs.themePreference;
-    }
+    Util.setThemePreference(this.controller);
 };
 
 PreferencesAssistant.prototype.autoUpdate = function(event) {

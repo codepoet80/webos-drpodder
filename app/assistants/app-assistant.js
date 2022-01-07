@@ -1,4 +1,4 @@
-        
+var systemModel = null;
 var DrPodder = {};
 DrPodder.MainStageName = "DrPodderMain";
 DrPodder.DashboardStageName = "DrPodderDashboard";
@@ -16,6 +16,7 @@ function AppAssistant(){
 	AppAssistant.powerService = new PowerService();
 	AppAssistant.mediaEventsService = new MediaEventsService();
 	AppAssistant.wifiService = new WifiService();
+	systemModel = new SystemModel();
 	this.setWakeup();
 }
 

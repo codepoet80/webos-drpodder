@@ -41,11 +41,19 @@ FeedListAssistant.prototype.viewMenuModel = {
 FeedListAssistant.prototype.setup = function() {
     updaterModel = new UpdaterModel();
 
-    if (Prefs.themePreference) {
+/*    if (Prefs.themePreference) {
         if (Prefs.themePreference != "system-theme") {
             this.controller.document.body.className = Prefs.themePreference;
+            Mojo.Log.info("Using local theme pref: " + Prefs.themePreference);
+        } else {
+            systemModel.LoadWOSAPrefs(function(response) {
+                if (response) {
+                    Mojo.Log.error("Using system theme pref: " + systemModel.WOSAPrefs.theme);
+                    this.controller.document.body.className = systemModel.WOSAPrefs.theme;
+                }
+            }.bind(this))
         }
-    }
+    }*/
 
     this.cmdMenuModel = {items:[
         { items: [] },
@@ -138,6 +146,7 @@ FeedListAssistant.prototype.setup = function() {
 
 FeedListAssistant.prototype.activate = function(result) {
     this.active = true;
+
     if (result) {
         // Utilities.dump(result);
         if (result.feedToAdd) {

@@ -13,6 +13,20 @@ Utilities.dump = function(obj){
     }
 };
 
+Utilities.prototype.setThemePreference = function(theController) {
+    if (Prefs.themePreference != "system-theme") {
+        theController.document.body.className = Prefs.themePreference;
+        Mojo.Log.info("Using local theme pref: " + Prefs.themePreference);
+    } else {
+        systemModel.LoadWOSAPrefs(function(response) {
+            if (response) {
+                Mojo.Log.error("Using system theme pref: " + systemModel.WOSAPrefs.theme);
+                theController.document.body.className = systemModel.WOSAPrefs.theme;
+            }
+        }.bind(this))
+    }
+}
+
 Utilities.prototype.showError = function(title, message){
     var stageController = Mojo.Controller.getAppController().getActiveStageController();
     
