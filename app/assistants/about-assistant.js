@@ -14,7 +14,9 @@ AboutAssistant.prototype.setup = function(){
 	if(!_device_.thisDevice.hasGesture){
 		this.cmdMenuModel = {items:[]};
 		this.cmdMenuModel.items.push(this.backButton);
-		this.controller.setupWidget(Mojo.Menu.commandMenu, {}, this.cmdMenuModel);
+		this.controller.setupWidget(Mojo.Menu.commandMenu, {
+            menuClass: 'no-fade'
+        }, this.cmdMenuModel);
 	}
 
 	this.controller.get( 'title' ).innerHTML = _APP_Name;

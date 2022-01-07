@@ -55,7 +55,9 @@ AddFeedAssistant.prototype.setup = function() {
     this.backTapHandler = this.backTap.bindAsEventListener(this);
     this.controller.listen(this.backElement, Mojo.Event.tap, this.backTapHandler);
    
-    this.controller.setupWidget(Mojo.Menu.commandMenu, this.handleCommand, this.cmdMenuModel);
+    this.controller.setupWidget(Mojo.Menu.commandMenu, {
+        menuClass: 'no-fade'
+    }, this.cmdMenuModel);
     this.controller.setupWidget("newFeedURL", {
             hintText : $L({value:"RSS feed URL", key:"RSSFeedURL"}),
             focus : true,

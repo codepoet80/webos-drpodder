@@ -47,7 +47,9 @@ WebSearchAssistant.prototype.setup = function() {
         this.cmdMenuModel.items[3]= this.kbdButton;
     }
 
-    this.controller.setupWidget(Mojo.Menu.commandMenu, this.handleCommand, this.cmdMenuModel);
+    this.controller.setupWidget(Mojo.Menu.commandMenu, {
+        menuClass: 'no-fade'
+    }, this.cmdMenuModel);
 };
 
 WebSearchAssistant.prototype.activate = function(event) {

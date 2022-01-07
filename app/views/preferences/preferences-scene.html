@@ -1,4 +1,4 @@
-<div class="palm-page-header">
+<div class="palm-page-header multi-line">
     <div class="palm-page-header-wrapper">
         <div class="icon" id="icon"></div>
         <div id="dialogTitle" class="title">Preferences</div>
@@ -9,6 +9,12 @@
     <div id="applicationSettings" class="palm-group-title">Application Settings</div>
    	<div class="palm-list">
         <div class="palm-row first">
+            <div class="palm-row-wrapper">
+                <div x-mojo-element="ListSelector" id="themePreferenceList"></div>
+            </div>
+        </div>
+
+        <div class="palm-row">
             <div class="palm-row-wrapper">
                 <div x-mojo-element="ToggleButton" id="freeRotationToggle"></div>
                 <div id="allowLandscape" class="title">Allow Landscape</div>

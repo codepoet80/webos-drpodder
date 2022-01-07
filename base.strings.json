@@ -213,5 +213,9 @@
 	"parseFeedErrorDetail": "Could not find title in feed: ",
 	"parseJSONError": "Error parsing JSON feed",
 	"parseJSONErrorDetail": "Could not find title in JSON feed: ",
-	"downloadsPendingWifi": "Downloads Pending WiFi"
+	"downloadsPendingWifi": "Downloads Pending WiFi",
+	"theme": "Theme",
+	"themeLight": "Light",
+	"themeDark": "Dark",
+	"themeSystem": "System Pref"
 }

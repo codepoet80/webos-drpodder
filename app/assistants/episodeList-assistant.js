@@ -140,7 +140,9 @@ EpisodeListAssistant.prototype.setup = function() {
     this.cmdMenuModel.items.push(this.filterArea);
     this.cmdMenuModel.items.push(this.refreshButton);
 
-    this.controller.setupWidget(Mojo.Menu.commandMenu, {}, this.cmdMenuModel);
+    this.controller.setupWidget(Mojo.Menu.commandMenu, {
+            menuClass: 'no-fade'
+        }, this.cmdMenuModel);
 
     this.menuModel = {
         visible: true,
@@ -167,7 +169,6 @@ EpisodeListAssistant.prototype.setup = function() {
         this.menuModel.items[0].label = $L({value:"Edit Feed",     key:"editFeed"    }); 
     }
 
-    this.controller.setupWidget(Mojo.Menu.commandMenu, this.handleCommand, this.cmdMenuModel);
     this.controller.setupWidget("filter-menu", this.handleCommand, this.filterMenuModel);
 
     var viewMenuPrev = {icon: "", command: "", label: " "};
@@ -189,7 +190,9 @@ EpisodeListAssistant.prototype.setup = function() {
                                         {label: this.feedObject.title,  width: centerItemWidth,  command: "feed-cmd"},
                                         viewMenuNext]
                                 },{}];
-    this.controller.setupWidget(Mojo.Menu.viewMenu, {}, this.viewMenuModel);
+    this.controller.setupWidget(Mojo.Menu.viewMenu, {
+        menuClass: 'no-fade'
+    }, this.viewMenuModel);
 
     // Filter
     var attr = {

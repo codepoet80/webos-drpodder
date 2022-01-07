@@ -41,6 +41,12 @@ FeedListAssistant.prototype.viewMenuModel = {
 FeedListAssistant.prototype.setup = function() {
     updaterModel = new UpdaterModel();
 
+    if (Prefs.themePreference) {
+        if (Prefs.themePreference != "system-theme") {
+            this.controller.document.body.className = Prefs.themePreference;
+        }
+    }
+
     this.cmdMenuModel = {items:[
         { items: [] },
         { items: [] }
@@ -53,7 +59,9 @@ FeedListAssistant.prototype.setup = function() {
     }
     this.cmdMenuModel.items[1].items.push( {icon: "refresh", command: "refresh-cmd", disabled: true});
 
-    this.controller.setupWidget(Mojo.Menu.commandMenu, this.handleCommand, this.cmdMenuModel);
+    this.controller.setupWidget(Mojo.Menu.commandMenu, {
+        menuClass: 'no-fade'
+    }, this.cmdMenuModel);
     this.controller.setupWidget("add-menu", this.handleCommand, this.addMenuModel);
 
     // Filter

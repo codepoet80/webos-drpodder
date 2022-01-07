@@ -221,7 +221,7 @@ Episode.prototype.updateUIElements = function(ignore) {
         if (this.listened) {
             this.indicatorColor = "gray";
         } else {
-            this.indicatorColor = "black";
+            this.indicatorColor = "";
         }
         this.statusIcon = "Knob Cancel.png";
     } else {
@@ -233,7 +233,7 @@ Episode.prototype.updateUIElements = function(ignore) {
                 this.statusIcon = "Knob Grey.png";
             }
         } else {
-            this.indicatorColor = "black";
+            this.indicatorColor = "";
             if (this.isLocalPlayable()) {
                 this.statusIcon = "Knob Play.png";
             } else {

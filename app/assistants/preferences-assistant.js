@@ -18,7 +18,17 @@ PreferencesAssistant.prototype.setup = function() {
     this.backElement = this.controller.get('icon');
     this.backTapHandler = this.backTap.bindAsEventListener(this);
     this.controller.listen(this.backElement, Mojo.Event.tap, this.backTapHandler);
- 
+
+    this.controller.setupWidget("themePreferenceList",
+    {label: $L({value:"Theme", key:"theme"}),
+        labelPlacement: Mojo.Widget.labelPlacementLeft,
+        choices: [
+            {label: $L({value:"Light", key:"themeLight"}), value: "palm-default"},
+            {label: $L({value:"Dark", key:"themeDark"}), value: "palm-dark"},
+            {label: $L({value:"System Pref", key:"themeSystem"}), value: "system-theme"}
+        ]},
+    { value : Prefs.themePreference });
+
     this.controller.setupWidget("freeRotationToggle",
         {},
         { value : Prefs.freeRotation });
@@ -118,14 +128,14 @@ PreferencesAssistant.prototype.setup = function() {
         { value : Prefs.transition });
 
     var translations = [
-                  {label: $L("English"), value: "en_us"},
-                  {label: $L("German"), value: "de_de"},
-                  {label: $L({value:"Latino Spanish", key:"latinoSpanish"}), value: "es_mx"},
-                  {label: $L({value:"Spain Spanish", key:"spainSpanish"}), value: "es_es"},
-                  {label: $L("French"), value: "fr"},
-                  {label: $L("Klingon"), value: "tlh"},
-                  {label: $L("Hungarian"), value: "hu"}
-                  ];
+        {label: $L("English"), value: "en_us"},
+        {label: $L("German"), value: "de_de"},
+        {label: $L({value:"Latino Spanish", key:"latinoSpanish"}), value: "es_mx"},
+        {label: $L({value:"Spain Spanish", key:"spainSpanish"}), value: "es_es"},
+        {label: $L("French"), value: "fr"},
+        {label: $L("Klingon"), value: "tlh"},
+        {label: $L("Hungarian"), value: "hu"}
+    ];
 
     switch (Prefs.systemTranslation) {
         case "en_us":
@@ -153,11 +163,6 @@ PreferencesAssistant.prototype.setup = function() {
         { value : Prefs.albumArt });
 
 
-//  this.controller.setupWidget("infomodusToggle",
-//      {},
-//      { value : Prefs.debugSwitch });
-
-
     this.controller.setupWidget("simpleToggle",
         {},
         { value : !Prefs.simple });
@@ -165,7 +170,8 @@ PreferencesAssistant.prototype.setup = function() {
     this.controller.setupWidget("singleTapToggle",
         {},
         { value : Prefs.singleTap });
-    
+
+    this.themePreferenceHandler = this.themePreference.bind(this);
     this.freeRotationHandler = this.freeRotation.bind(this);
     this.autoUpdateHandler = this.autoUpdate.bind(this);
     this.updateIntervalHandler = this.updateInterval.bind(this);
@@ -209,6 +215,7 @@ PreferencesAssistant.prototype.localize = function() {
 };
 
 PreferencesAssistant.prototype.activate = function() {
+    Mojo.Event.listen(this.controller.get('themePreferenceList'),Mojo.Event.propertyChange,this.themePreferenceHandler);
     Mojo.Event.listen(this.controller.get('freeRotationToggle'),Mojo.Event.propertyChange,this.freeRotationHandler);
     Mojo.Event.listen(this.controller.get('autoUpdateToggle'),Mojo.Event.propertyChange,this.autoUpdateHandler);
     Mojo.Event.listen(this.controller.get('updateIntervalList'),Mojo.Event.propertyChange,this.updateIntervalHandler);
@@ -234,6 +241,7 @@ PreferencesAssistant.prototype.backTap = function(event)
 };
 
 PreferencesAssistant.prototype.deactivate = function() {
+    Mojo.Event.stopListening(this.controller.get('freeRotationToggle'),Mojo.Event.propertyChange,this.themePreferenceHandler);
     Mojo.Event.stopListening(this.controller.get('freeRotationToggle'),Mojo.Event.propertyChange,this.freeRotationHandler);
     Mojo.Event.stopListening(this.controller.get('autoUpdateToggle'),Mojo.Event.propertyChange,this.autoUpdateHandler);
     Mojo.Event.stopListening(this.controller.get('updateIntervalList'),Mojo.Event.propertyChange,this.updateIntervalHandler);
@@ -255,11 +263,14 @@ PreferencesAssistant.prototype.deactivate = function() {
 
 PreferencesAssistant.prototype.freeRotation = function(event) {
     Prefs.freeRotation = event.value;
-    /*
-    var dialog = new drnull.Dialog.Info(this, $L({value:"Restart Required", key:"restartRequired"}),
-        $L({value:"Changing Free Rotation requires a restart of drPodder.", key:"changingFreeRotation"}));
-    dialog.show();
-    */
+};
+
+PreferencesAssistant.prototype.themePreference = function(event) {
+    Mojo.Log.info("Setting theme to: " + event.value);
+    Prefs.themePreference = event.value;
+    if (Prefs.themePreference != "system-theme") {
+        this.controller.document.body.className = Prefs.themePreference;
+    }
 };
 
 PreferencesAssistant.prototype.autoUpdate = function(event) {
@@ -396,7 +407,6 @@ PreferencesAssistant.prototype.infomodus = function(event) {
 PreferencesAssistant.prototype.handleCommand = function(event) {
     if(event.type === Mojo.Event.back || (event.type === Mojo.Event.command && event.command == "cmd-backButton")) {
         this.controller.stageController.popScene();
-        break;
     }
 }
 

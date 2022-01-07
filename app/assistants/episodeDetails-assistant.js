@@ -131,6 +131,9 @@ EpisodeDetailsAssistant.prototype.setup = function() {
 
     }.bind(this));
 
+    Mojo.Log.error("episode art: " + this.episodeObject.feedObject.albumArt);
+    this.controller.get("episodeAlbumArt").src = "/media/internal/" + this.episodeObject.feedObject.albumArt;
+
     this.progressModel.value = 0;
     this.progressModel.progressStart = 0;
     this.progressModel.progressEnd = 0;
@@ -144,7 +147,9 @@ EpisodeDetailsAssistant.prototype.setup = function() {
     this.cmdMenuModel.items[1] = this.menuCommandItems.playerControls;
     this.refreshMenu();
     if (this.episodeObject.enclosure || this.episodeObject.downloaded) {
-        this.controller.setupWidget(Mojo.Menu.commandMenu, this.handleCommand, this.cmdMenuModel);
+        this.controller.setupWidget(Mojo.Menu.commandMenu, {
+            menuClass: 'no-fade'
+        }, this.cmdMenuModel);
         if (!this.isVideo()) {
 
             this.audioObject = this.controller.get('audioTag');
@@ -260,7 +265,7 @@ EpisodeDetailsAssistant.prototype.orientationChanged = function(orientation) {
 };
 
 EpisodeDetailsAssistant.prototype.adjustHeader = function() {
-    var height=this.controller.get("topContent").getHeight();
+    var height=this.controller.get("topContent").getHeight() + 8;
     try {
        this.controller.get("topSpacer").style.height = height + 'px';
        this.controller.get("descriptionFade").style.top = height + 'px';

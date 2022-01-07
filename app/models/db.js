@@ -546,6 +546,7 @@ DBClass.prototype.readPrefs = function() {
     if (Prefs.simple === undefined) {Prefs.simple = false;}
     if (Prefs.singleTap === undefined) {Prefs.singleTap = true;}
     if (Prefs.debugSwitch === undefined) {Prefs.debugSwitch = false;}
+    if (Prefs.themePreference === undefined) {Prefs.themePreference = "palm-default"}
     if (Prefs.freeRotation === undefined) {Prefs.freeRotation = true; Prefs.firstRun = true;}
     if (Prefs.transition === undefined) {Prefs.transition = Mojo.Transition.none;}
     Prefs.systemTranslation = Mojo.Locale.getCurrentLocale();

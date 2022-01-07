@@ -28,15 +28,13 @@ FeedDetailAssistant.prototype.setup = function() {
     this.controller.setupWidget(Mojo.Menu.appMenu, this.appMenuAttributes, this.appMenuModel);
 
     //Command Buttons
-    this.cmdMenuAttributes = {
-            spacerHeight: 0,
-            menuClass: 'no-fade'
-        },
-        this.cmdMenuModel = {
-            visible: false,
-        };
+    this.cmdMenuModel = {
+        visible: false,
+    };
 
-    this.controller.setupWidget(Mojo.Menu.commandMenu, this.cmdMenuAttributes, this.cmdMenuModel);
+    this.controller.setupWidget(Mojo.Menu.commandMenu, {
+        menuClass: 'no-fade'
+    }, this.cmdMenuModel);
 
     /* add event handlers to listen to events from widgets */
     this.backElement = this.controller.get('icon');
