@@ -1,6 +1,8 @@
 # DrPodder Redux
 
-Podcast app for legacy webOS, written in Mojo.
+Podcast app for legacy webOS, written in Mojo. Based on original code by Jamie Hatfield and Walter Koch.
+
+![App Icon](icon.png)
 
 ## What is This?
 
