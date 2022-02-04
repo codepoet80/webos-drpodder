@@ -179,12 +179,12 @@ EpisodeListAssistant.prototype.setup = function() {
     if (this.feedObject.displayOrder < feedModel.items.length-1) {
         viewMenuNext = {icon: "forward", command: "feedNext-cmd"};
     }
-    Mojo.Log.info("window width: " + Mojo.Environment.DeviceInfo.screenWidth);
-    Mojo.Log.info("window height: " + Mojo.Environment.DeviceInfo.screenHeight);
-    var baseWidth = Math.min(Mojo.Environment.DeviceInfo.screenWidth, Mojo.Environment.DeviceInfo.screenHeight)
+    var baseWidth = Math.min(this.controller.window.innerWidth, this.controller.window.innerHeight)
+    // TODO: If we re-calculate this on window.resize, we could always use the innerWidth and it would look better on the Pre3
+        //var baseWidth = this.controller.window.innerWidth;
     centerItemWidth = Math.floor(baseWidth - 120);
     centerItemWidth = Math.max(centerItemWidth, 200);
-    Mojo.Log.warn("USING WIDTH: " + centerItemWidth);
+    Mojo.Log.info("Center menu width: " + centerItemWidth);
 
     this.viewMenuModel.items = [{},{items: [viewMenuPrev,
                                         {label: this.feedObject.title,  width: centerItemWidth,  command: "feed-cmd"},

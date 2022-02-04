@@ -270,14 +270,22 @@
 
 .progressDonePlaylist,
 .progressDone {
-	background-color: palegoldenrod;
+	background-color: rgb(250, 250, 106);
 	z-index: -1;
+}
+
+.palm-dark .progressDone {
+	background-color: rgb(216, 219, 12);
 }
 
 .bookmarkDonePlaylist,
 .bookmarkDone {
 	background-color: lightblue;
 	z-index: -2;
+}
+
+.palm-dark .bookmarkDone {
+	background-color: rgb(100, 172, 245);
 }
 
 .progressDonePlaylist,

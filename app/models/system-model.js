@@ -261,7 +261,7 @@ SystemModel.prototype.LaunchApp = function(appName, params) {
             Mojo.Log.info("App Launch Success", appName, JSON.stringify(response));
         },
         onFailure: function(response) {
-            Mojo.Log.error("Alarm Launch Failure", appName, JSON.stringify(response));
+            Mojo.Log.error("App Launch Failure", appName, JSON.stringify(response));
         }
     });
     return true;
