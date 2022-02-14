@@ -506,7 +506,6 @@ AddFeedAssistant.prototype.checkFailure = function(transport) {
 };
 
 AddFeedAssistant.prototype.handleCommand = function(event) {
-    Mojo.Log.error("handling command");
     if (event.type === Mojo.Event.command) {
         switch (event.command) {
             case "authentication-cmd":
@@ -532,9 +531,9 @@ AddFeedAssistant.prototype.handleCommand = function(event) {
                 break;
         }
     } else if (event.type === Mojo.Event.back) {
-        Mojo.Log.error("Received back event from Mojo!");
         event.stop();
         event.stopPropagation();
         this.checkFeed();
+        return true;
     }
 };
