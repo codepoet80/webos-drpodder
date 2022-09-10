@@ -201,5 +201,8 @@
 	"parseFeedErrorDetail": "No se pudo encontrar el título del feed: ",
 	"parseJSONError": "Error de análisis JSON feed",
 	"parseJSONErrorDetail": "No se pudo encontrar el título en JSON feed: ",
-	"downloadsPendingWifi": "Descargas esperando Wifi"
+	"downloadsPendingWifi": "Descargas esperando Wifi",
+
+	"migrateFeedTitle": "Feed Roto",
+	"migrateFeedMessage": "webOS Archive se está moviendo a un dominio.org, lo que significa que este feed eventualmente se romperá. Elimine y vuelva a agregar el feed para migrar al nuevo dominio."
 }

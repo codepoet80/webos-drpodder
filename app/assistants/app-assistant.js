@@ -9,6 +9,7 @@ DrPodder.PodcastSearchText = null;
 DrPodder.PodcastSearchResults = null;
 DrPodder.UpdateCheckDone = false;
 DrPodder.CurrentShareURL = null;
+DrPodder.IncomingAddFeed = null;
 
 function AppAssistant(){
 	AppAssistant.downloadService = new DownloadService();
@@ -26,7 +27,7 @@ AppAssistant.prototype.handleLaunch = function(launchParams) {
 		DB = new DBClass();
 		DB.readPrefs();
 	}
-	if (!launchParams || launchParams.action === undefined) {
+	if (!launchParams || launchParams.action === undefined || launchParams.action == "addFeed") {
 		var cardStageController = this.controller.getStageController(DrPodder.MainStageName);
 		if (cardStageController) {
 			Mojo.Log.warn("Main Stage exists");
@@ -38,6 +39,12 @@ AppAssistant.prototype.handleLaunch = function(launchParams) {
 			Mojo.Log.warn("Create Main Stage");
 			var stageArguments = {name: DrPodder.MainStageName, lightweight: true};
 			this.controller.createStageWithCallback(stageArguments, pushMainScene.bind(this), "card");
+		}
+		if (launchParams.action != undefined && launchParams.action == "addFeed" && launchParams.url != undefined) {
+			Mojo.Log.info("Launched with an add feed request for URL: " + launchParams.url)
+			DrPodder.IncomingAddFeed = { url: launchParams.url };
+			if (launchParams.title)
+				DrPodder.IncomingAddFeed.title = launchParams.title;
 		}
 	} else {
 		if (!DB.ready) {
@@ -201,7 +208,7 @@ AppAssistant.prototype.importOpml = function(opml) {
 		}
 	} catch (e){
 		Mojo.Log.error("error with OPML: (%s)", e);
-		Util.showError($L({value:"Error parsing OPML File", key:"errorParsingOPML"}), $L({value:"There was an error parsing the OPML file.  Please send the file to curator@webosarchive.com.", key:"errorParsingOPMLBody"}));
+		Util.showError($L({value:"Error parsing OPML File", key:"errorParsingOPML"}), $L({value:"There was an error parsing the OPML file.  Please send the file to curator@webosarchive.org.", key:"errorParsingOPMLBody"}));
 	}
 };
 
@@ -269,7 +276,7 @@ AppAssistant.prototype.handleCommand = function(event) {
 					}.bind(this),
 					function() {
 						var dialog = new drnull.Dialog.Info(event.assistant, $L({value:"Sorry for the inconvenience!", key:"sorry1"}),
-							$L({value:"I hope you can resolve your problem.  Please contact curator@webosarchive.com if you need further assistance.", key:"sorry2"}));
+							$L({value:"I hope you can resolve your problem.  Please contact curator@webosarchive.org if you need further assistance.", key:"sorry2"}));
 						dialog.show();
 					}.bind(this));
 				dialog.show();
@@ -303,7 +310,7 @@ AppAssistant.prototype.handleCommand = function(event) {
 			    var obj = new Mojo.Service.Request("palm://com.palm.applicationManager", {
 			    	method: "open",
 			    	parameters: {
-			    		target: 'http://www.webosarchive.com/drpodder/help#' + url
+			    		target: 'http://www.webosarchive.org/drpodder/help#' + url
 			    	}
 			    });
 				break;

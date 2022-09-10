@@ -568,19 +568,19 @@ DBClass.prototype.writePrefs = function() {
 DBClass.prototype.defaultFeeds = function() {
 
     var feed = new Feed();
-    feed.url = "http://www.webosarchive.com/podcasts/feeds/PalmCast/feed.xml?test=3";
+    feed.url = "http://www.webosarchive.org/podcasts/feeds/PalmCast/feed.xml?test=3";
     feed.title = "PalmCast (Restored)";
     feed.interval = 30000;
     feedModel.add(feed);
 
     var feed = new Feed();
-    feed.url = "http://podcasts.webosarchive.com/tiny.php?url=aHR0cHM6Ly9mZWVkcy50d2l0LnR2L3R3aXQueG1s&max=25";
+    feed.url = "http://podcasts.webosarchive.org/tiny.php?url=aHR0cHM6Ly9mZWVkcy50d2l0LnR2L3R3aXQueG1s&max=25";
     feed.title = "This Week in Tech (TWiT)";
     feed.interval = 30000;
     feedModel.add(feed);
 
     var feed = new Feed();
-    feed.url = "http://podcasts.webosarchive.com/tiny.php?url=aHR0cHM6Ly9mZWVkcy5tZWdhcGhvbmUuZm0vc3R1ZmZ5b3VzaG91bGRrbm93&max=25";
+    feed.url = "http://podcasts.webosarchive.org/tiny.php?url=aHR0cHM6Ly9mZWVkcy5tZWdhcGhvbmUuZm0vc3R1ZmZ5b3VzaG91bGRrbm93&max=25";
     feed.title = "Stuff You Should Know";
     feed.interval = 30000;
     feedModel.add(feed);

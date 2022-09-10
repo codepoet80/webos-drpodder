@@ -320,6 +320,16 @@ EpisodeListAssistant.prototype.activate = function(changes) {
     Mojo.Event.listen(this.episodeList, Mojo.Event.listReorder, this.handleReorderHandler);
 //  Mojo.Event.listen(this.episodeList, Mojo.Event.hold, this.handleHoldHandler);
     Mojo.Event.listen(this.episodeList, Mojo.Event.dragStart, this.dragStartHandler);
+
+    if (this.feedObject.url.indexOf("webosarchive.com") != -1) {
+        this.controller.showAlertDialog({
+            title: $L({value:"Feed Needs Fixing", key:"migrateFeedTitle"}),
+            message: $L({value:"webOS Archive is moving to a .org domain, which means this feed will eventually break. Please delete and re-add the feed to migrate to the new domain.", key:"migrateFeedMessage"}),
+            choices: [
+                { label: "OK", value: "yes", type: "affirmative" }
+            ]
+        });
+    }
 }
 
 EpisodeListAssistant.prototype.deactivate = function(changes) {
@@ -472,7 +482,7 @@ EpisodeListAssistant.prototype.handleCommand = function(event) {
                             podcastTitle: this.feedObject.title};
                 var subject = $L({value: "Check out this podcast I found with drPodder!", key: "shareEpisodeSubject"});
                 var message = $L({value: "Hi,<br/><br/>I thought you'd like to check out this nice podcast I'm enjoying in " +
-                                    "<a href=\"http://www.webosarchive.com/drpodder\">drPodder Redux</a> " +
+                                    "<a href=\"http://appcatalog.webosarchive.org/app/drPodder\">drPodder Redux</a> " +
                                     "on my webOS device.<br/><br/>" +
                                     "To subscribe to this podcast yourself, copy the following link and " +
                                     "paste it into your favorite Podcatcher!<br/><br/>" +
@@ -622,7 +632,7 @@ EpisodeListAssistant.prototype.pubDateFormatter = function(pubDate, model) {
 };
 
 EpisodeListAssistant.prototype._refreshDebounced = function() {
-    DrPodder.CurrentShareURL = "http://podcasts.webosarchive.com/detail.php?url=" + encodeURIComponent(this.feedObject.url);
+    DrPodder.CurrentShareURL = "http://podcasts.webosarchive.org/detail.php?url=" + encodeURIComponent(this.feedObject.url);
 
     this.needRefresh = true;
     if (!this.refreshedOnce) {

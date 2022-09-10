@@ -302,7 +302,7 @@ EpisodeDetailsAssistant.prototype.activate = function() {
     if (this.episodeObject.enclosure && this.episodeObject.enclosure != "")
         DrPodder.CurrentShareURL = this.episodeObject.enclosure;
     else
-        DrPodder.CurrentShareURL = "http://podcasts.webosarchive.com/detail.php?url=" + encodeURIComponent(this.episodeObject.feedObject.url);
+        DrPodder.CurrentShareURL = "http://podcasts.webosarchive.org/detail.php?url=" + encodeURIComponent(this.episodeObject.feedObject.url);
 };
 
 EpisodeDetailsAssistant.prototype.deactivate = function() {
@@ -789,7 +789,7 @@ EpisodeDetailsAssistant.prototype.handleCommand = function(event) {
                             podcastTitle: this.episodeObject.feedObject.title};
                 var subject = $L({value: "Check out this podcast I found with drPodder!", key: "shareEpisodeSubject"});
                 var message = $L({value: "Hi,<br/><br/>I thought you'd like to check out this nice podcast I'm enjoying in " +
-                                 "<a href=\"http://www.webosarchive.com/drpodder\">drPodder Redux</a> " +
+                                 "<a href=\"http://appcatalog.webosarchive.org/app/drPodder\">drPodder Redux</a> " +
                                  "on my webOS device.<br/><br/>To download the episode, just use this link: " +
                                  "<a href=\"#{episodeURL}\">#{episodeTitle}</a><br/><br/>" +
                                  "To subscribe to this podcast yourself, copy the following link and " +

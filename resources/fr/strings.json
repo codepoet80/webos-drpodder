@@ -213,5 +213,8 @@
 	"parseFeedErrorDetail": "Impossible de trouver le titre dans le flux: ",
 	"parseJSONError": "Erreur de parsing/parsage du flux JSON",
 	"parseJSONErrorDetail": "Impossible de trouver le titre dans le flux JSON: ",
-	"downloadsPendingWifi": "Téléchargements en attente par WiFi"
+	"downloadsPendingWifi": "Téléchargements en attente par WiFi",
+
+	"migrateFeedTitle": "Feed cassée",
+	"migrateFeedMessage": "webOS Archive se déplace vers un domaine.org, ce qui signifie que ce flux finira par se briser. Veuillez supprimer et rajouter le flux pour migrer vers le nouveau domaine."
 }

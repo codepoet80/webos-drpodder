@@ -1,7 +1,7 @@
 function wosaPodcastDirectorySearch() {
 	
 }
-var directoryURLBase = "http://podcasts.webosarchive.com/";
+var directoryURLBase = "http://podcasts.webosarchive.org/";
 wosaPodcastDirectorySearch.prototype.url = directoryURLBase + "search.php?q={keyword}&max=50";
 wosaPodcastDirectorySearch.prototype.detailUrl = directoryURLBase + "getdetailby.php?url={keyword}";
 

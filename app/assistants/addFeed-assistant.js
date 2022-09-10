@@ -24,8 +24,8 @@ function AddFeedAssistant(feed) {
         this.replacementModel.items = this.feed.getReplacementsArray();
     } else {
         this.newFeed = true;
-        this.title = null;
-        this.url = null;
+        this.title = DrPodder.IncomingAddFeed.title ;
+        this.url = DrPodder.IncomingAddFeed.url;
         this.username = null;
         this.password = null;
         this.albumArt = null;
@@ -43,9 +43,10 @@ AddFeedAssistant.prototype.setup = function() {
     this.menuModel = {
         visible: true,
         items: [
+            {label: $L("Cancel"), command: "cancel-cmd"},
             Mojo.Menu.editItem,
             {label: $L("Authentication"), command: "authentication-cmd"},
-            {label: $L("Help"), command: "help-cmd"}
+            {label: $L("Help"), command: "help-cmd"},
         ]
     };
     this.controller.setupWidget(Mojo.Menu.appMenu, this.menuAttr, this.menuModel);
@@ -67,6 +68,7 @@ AddFeedAssistant.prototype.setup = function() {
             enterSubmits : false
         },
         this.urlModel = { value : this.url });
+    DrPodder.IncomingAddFeed = null;
 
     this.controller.setupWidget("username", {
             hintText : $L("Username"),

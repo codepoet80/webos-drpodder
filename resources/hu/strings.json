@@ -222,5 +222,8 @@
 	"themeSystem": "Alapértelmezett",
 	"allowLandscape": "Elforgatás engedélyezése",
 	"importClipDrpodder": "Másolás a vágólapról",
-	"exportClipDrpodder": "Másolás a vágólapra"
+	"exportClipDrpodder": "Másolás a vágólapra",
+
+	"migrateFeedTitle": "Feed törött",
+	"migrateFeedMessage": "A webOS Archive egy.org domainre költözik, ami azt jelenti, hogy ez a hírcsatorna végül megszakad. Törölje, majd adja hozzá újra a hírcsatornát az új domainre való áttéréshez."
 }

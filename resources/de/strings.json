@@ -58,14 +58,14 @@
 	"opmlImportStatus": "Die importierten Feeds befinden sich am Ende Ihrer Feedliste.<br/><br/>Anzahl der importierten Feeds: #{num}",
 	"noValidFeeds": "Keine gültigen Feeds in drpodder.xml gefunden",
 	"errorParsingOPML": "Fehler bei der Verarbeitung der OPML-Datei",
-	"errorParsingOPMLBody": "Es gab einen Fehler bei der Verarbeitung der OPML-Datei. Bitte senden Sie die Datei an curator@webosarchive.com.",
+	"errorParsingOPMLBody": "Es gab einen Fehler bei der Verarbeitung der OPML-Datei. Bitte senden Sie die Datei an curator@webosarchive.org.",
 	"opmlInstructions": "Kopieren Sie das Folgende in eine drpodder.xml benannte Datei (stellen Sie sicher, dass der Dateiname kleingeschrieben ist und Windows die Datei nicht in drpodder.xml.txt umbenennt).<br>Um diese Reihe von Feeds wiederherzustellen kopieren Sie einfach drpodder.xml in das USB-Hauptverzeichnis des WebOS-Gerätes.",
 	"opmlSubject": "drPodder Redux OPML-Export",
 	"reportProblemPrompt": "Möchten Sie eine vorgefertigte E-Mail mit einem detaillierten Fehlerbericht versenden? Sie beinhaltet keine persönlichen Informationen wie etwa Benutzernamen oder Passwörter.",
 	"reportProblemIntro": "Bitte beschreiben Sie Ihr Problem mit drPodder Redux hier:",
 	"reportInfo": "Reportinformation (bitte nicht entfernen)",
 	"sorry1": "Entschuldigen Sie bitte die Unannehmlichkeiten!",
-	"sorry2": "Ich hoffe, Sie können Ihr Problem lösen. Bitte wenden Sie sich an curator@webosarchive.com, wenn Sie weitere Hilfe benötigen.",
+	"sorry2": "Ich hoffe, Sie können Ihr Problem lösen. Bitte wenden Sie sich an curator@webosarchive.org, wenn Sie weitere Hilfe benötigen.",
 	"shareEpisodeSubject": "Diesen Podcast habe ich mittels der App drPodder Redux gefunden!",
 	"shareEpisodeBody": "Hallo,<br/><br/>vielleicht gefällt Dir dieser Podcast, den ich gerade mit der App drPodder Redux auf meinem Palm webOS-Telefon genieße.<br/><br/>Für den Download der Episode einfach auf diesen Link klicken: <a href=\"#{episodeURL}\">#{episodeTitle}</a></a><br/><br/>Um selber diesen Podcast zu abonnieren, kopiere einfach den folgenden Link und füge ihn in den Podcatcher Deiner Wahl ein!<br/><br/>Podcast-Titel: <a href=\"#{podcastURL}\">#{podcastTitle}</a><br/>Podcast-URL:<br/>#{podcastURL}",
 	"sharePodcastBody": "Hallo,<br/><br/>vielleicht gefällt Dir dieser Podcast, den ich gerade mit der App drPodder Redux auf meinem Palm webOS-Telefon genieße.<br/><br/>Um selber diesen Podcast zu abonnieren, kopiere einfach den folgenden Link und füge ihn in den Podcatcher Deiner Wahl ein!<br/><br/>Podcast-Titel: <a href=\"#{podcastURL}\">#{podcastTitle}</a><br/>Podcast-URL:<br/>#{podcastURL}",
@@ -214,5 +214,8 @@
 	"parseFeedErrorDetail": "Titel im Feed nicht auffindbar: ",
 	"parseJSONError": "Fehler bei der Verarbeitung des JSON-Feeds",
 	"parseJSONErrorDetail": "Titel im JSON-Feed nicht auffindbar: ",
-	"downloadsPendingWifi": "WLAN-Downloads anhängig"
+	"downloadsPendingWifi": "WLAN-Downloads anhängig",
+
+	"migrateFeedTitle": "Feed Kaputt",
+	"migrateFeedMessage": "webOS Archive wechselt zu einer.org-Domain, was bedeutet, dass dieser Feed irgendwann kaputt gehen wird. Bitte löschen Sie den Feed und fügen Sie ihn erneut hinzu, um zur neuen Domain zu migrieren."
 }

@@ -55,7 +55,7 @@ FeedDetailAssistant.prototype.activate = function() {
     /* put in event handlers here that should only be in effect when this scene is active. For
        example, key handlers that are observing the document */
     
-    DrPodder.CurrentShareURL = "http://podcasts.webosarchive.com/detail.php?id=" + encodeURIComponent(DrPodder.PodcastDetails.id);
+    DrPodder.CurrentShareURL = "http://podcasts.webosarchive.org/detail.php?id=" + encodeURIComponent(DrPodder.PodcastDetails.id);
     Mojo.Controller.getAppController().showBanner({ messageText: 'Touch2Share Ready!' }, { source: 'notification' });
 };
 

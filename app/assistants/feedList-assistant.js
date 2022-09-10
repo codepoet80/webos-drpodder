@@ -268,8 +268,14 @@ FeedListAssistant.prototype.onBlur = function() {
 };
 
 FeedListAssistant.prototype.onFocus = function() {
+    Mojo.Log.info("Feed List got focus!");
     if (this.active) {
         this.refreshNow();
+    }
+
+    if (DrPodder.IncomingAddFeed != null) {
+        Mojo.Log.info("Adding Feed requested: " + JSON.stringify(DrPodder.IncomingAddFeed));
+        this.stageController.pushScene({name: "addFeed", transition: Prefs.transition}, null);
     }
 
     if (!this.foregroundVolumeMarker) {
@@ -466,7 +472,7 @@ FeedListAssistant.prototype.handleCommand = function(event) {
                                                              limitSite: "http://ota.versatilemonkey.com"});
                 break;
             case 'about-cmd':
-                this.ShowDialogBox("drPodder Redux - " + Mojo.Controller.appInfo.version, "Podcast Client for webOS. Based on Guttenpodder and drPodder. Copyright 2021, Jon Wise. Distributed under a GPLv3 license.<br>Source code available at: https://github.com/codepoet80/webos-drpodder<br>Podcast Directory provided by webOSArchive.com");
+                this.ShowDialogBox("drPodder Redux - " + Mojo.Controller.appInfo.version, "Podcast Client for webOS. Based on Guttenpodder and drPodder. Copyright 2021, Jon Wise. Distributed under a GPLv3 license.<br>Source code available at: https://github.com/codepoet80/webos-drpodder<br>Podcast Directory provided by webOSArchive.org");
                 break;
             case "refresh-cmd":
                 this.updateFeeds();
@@ -653,7 +659,7 @@ FeedListAssistant.prototype.importOpml = function(opml) {
         }
     } catch (e){
         Mojo.Log.error("error with OPML: (%s)", e);
-        Util.showError($L({value:"Error parsing OPML File", key:"errorParsingOPML"}), $L({value:"There was an error parsing the OPML file.  Please send the file to curator@webosarchive.com.", key:"errorParsingOPMLBody"}));
+        Util.showError($L({value:"Error parsing OPML File", key:"errorParsingOPML"}), $L({value:"There was an error parsing the OPML file.  Please send the file to curator@webosarchive.org.", key:"errorParsingOPMLBody"}));
     }
 };
 

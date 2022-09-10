@@ -33,7 +33,7 @@ _APP_Copyright_Detail= Mojo.appInfo.copyright;
 // Optional
 _APP_Publisher_URL = Mojo.appInfo.vendorurl; 
 //_APP_Help_Resource = [
-  //  				 	{ type: 'web', label: 'Website', url: 'http://www.webosarchive.com/drpodder'},
+  //  				 	{ type: 'web', label: 'Website', url: 'http://www.webosarchive.org/drpodder'},
 						//{ type: 'web', label: 'FAQ', url: 'http://www.u32.de/guttenpodder#faq'},
 						//{ type : 'faq', label: $L('Frequently Asked Questions'), sceneName: 'faq' },
 						//{ type : 'scene', label: 'Application License', sceneName: 'gpl' }

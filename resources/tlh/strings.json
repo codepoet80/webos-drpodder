@@ -212,5 +212,8 @@
 	"parseFeedErrorDetail": "Feed pong SamlaHbe': ",
 	"parseJSONError": "Error parsing JSON feed",
 	"parseJSONErrorDetail": "JSON feed pong SamlaHbe': ",
-	"downloadsPendingWifi": "Wi-Fi chu'DI'; lI'"
+	"downloadsPendingWifi": "Wi-Fi chu'DI'; lI'",
+
+	"migrateFeedTitle": "Feed Needs Fixing",
+	"migrateFeedMessage": "webOS Archive is moving to a .org domain, which means this feed will eventually break. Please delete and re-add the feed to migrate to the new domain."
 }
