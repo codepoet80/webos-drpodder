@@ -27,7 +27,7 @@ AppAssistant.prototype.handleLaunch = function(launchParams) {
 		DB = new DBClass();
 		DB.readPrefs();
 	}
-	if (!launchParams || launchParams.action === undefined || launchParams.action == "addFeed") {
+	if (!launchParams || launchParams.action === undefined) {
 		var cardStageController = this.controller.getStageController(DrPodder.MainStageName);
 		if (cardStageController) {
 			Mojo.Log.warn("Main Stage exists");
@@ -40,7 +40,8 @@ AppAssistant.prototype.handleLaunch = function(launchParams) {
 			var stageArguments = {name: DrPodder.MainStageName, lightweight: true};
 			this.controller.createStageWithCallback(stageArguments, pushMainScene.bind(this), "card");
 		}
-		if (launchParams.action != undefined && launchParams.action == "addFeed" && launchParams.url != undefined) {
+		//Handle add feed from external launcher
+		if (launchParams && launchParams.intent && launchParams.intent == "addFeed" && launchParams.url) {
 			Mojo.Log.info("Launched with an add feed request for URL: " + launchParams.url)
 			DrPodder.IncomingAddFeed = { url: launchParams.url };
 			if (launchParams.title)
