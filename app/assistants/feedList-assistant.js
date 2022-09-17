@@ -472,7 +472,7 @@ FeedListAssistant.prototype.handleCommand = function(event) {
                                                              limitSite: "http://ota.versatilemonkey.com"});
                 break;
             case 'about-cmd':
-                this.ShowDialogBox("drPodder Redux - " + Mojo.Controller.appInfo.version, "Podcast Client for webOS. Based on Guttenpodder and drPodder. Copyright 2021, Jon Wise. Distributed under a GPLv3 license.<br>Source code available at: https://github.com/codepoet80/webos-drpodder<br>Podcast Directory provided by webOSArchive.org");
+                this.ShowDialogBox("drPodder Redux - " + Mojo.Controller.appInfo.version, "Podcast Client for webOS. Based on Guttenpodder and drPodder. Copyright 2022, Jon W. Distributed under a GPLv3 license.<br>Source code available at: https://github.com/codepoet80/webos-drpodder<br>Podcast Directory provided by webOSArchive.org");
                 break;
             case "refresh-cmd":
                 this.updateFeeds();
