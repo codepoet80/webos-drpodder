@@ -24,8 +24,14 @@ function AddFeedAssistant(feed) {
         this.replacementModel.items = this.feed.getReplacementsArray();
     } else {
         this.newFeed = true;
-        this.title = DrPodder.IncomingAddFeed.title ;
-        this.url = DrPodder.IncomingAddFeed.url;
+        if (DrPodder.IncomingAddFeed) {
+            this.title = DrPodder.IncomingAddFeed.title;
+            this.url = DrPodder.IncomingAddFeed.url;
+        }
+        else {
+            this.title = null;
+            this.url = null;
+        }
         this.username = null;
         this.password = null;
         this.albumArt = null;
