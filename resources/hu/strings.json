@@ -224,6 +224,6 @@
 	"importClipDrpodder": "Másolás a vágólapról",
 	"exportClipDrpodder": "Másolás a vágólapra",
 
-	"migrateFeedTitle": "Feed törött",
-	"migrateFeedMessage": "A webOS Archive egy.org domainre költözik, ami azt jelenti, hogy ez a hírcsatorna végül megszakad. Törölje, majd adja hozzá újra a hírcsatornát az új domainre való áttéréshez."
+	"migrateFeedTitle": "Ez a feed elköltözött",
+	"migrateFeedMessage": "A webOS Archive egy .org domainre költözött, ez a podcast feed a továbbiakban nem fog működni. Törölje, majd adja hozzá újra a feedet az új domainre való áttéréshez."
 }
