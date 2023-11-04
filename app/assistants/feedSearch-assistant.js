@@ -31,17 +31,20 @@ FeedSearchAssistant.prototype.setup = function() {
 		}
 	); 
   
+	var tinyFeedValue = "Full";
+	if (UseTinyFeed)
+		tinyFeedValue = "Tiny";
 	//Feed Type Picker
 	this.controller.setupWidget("listUseTiny",
 		this.attributes = {
 			label: $L("Feed Type"),
 			choices: [
-				{ label: "Tiny", value: true },
-				{ label: "Full", value: false }
+				{ label: "Tiny", value: "Tiny" },
+				{ label: "Full", value: "Full" }
 			]
 		},
 		this.model = {
-			value: UseTinyFeed,
+			value: tinyFeedValue,
 			disabled: false
 		}
 	);
@@ -144,7 +147,10 @@ FeedSearchAssistant.prototype.handleValueChange = function(event) {
     Mojo.Log.info(event.srcElement.id + " value changed to " + event.value);
     switch (event.srcElement.id) {
         case "listUseTiny":
-			UseTinyFeed = event.value;
+			if (event.value == "Full")
+				UseTinyFeed = false;
+			else
+				UseTinyFeed = true;
 			break;
         case "listMaxEpisodes":
             MaxEpisodes = event.value;
