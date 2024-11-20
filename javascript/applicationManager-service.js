@@ -18,7 +18,7 @@ ApplicationManagerService.prototype.email = function(summary, text, toSupport) {
     if (toSupport) {
         recipients.push({type: 'email',
                          role: 1,
-                         value: 'curator@webosarchive.org',
+                         value: 'webosarchive@gmail.com',
                          contactDisplay: 'drPodder Support'});
     }
     var obj = new Mojo.Service.Request(this.URI, {

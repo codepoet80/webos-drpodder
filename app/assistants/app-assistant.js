@@ -209,7 +209,7 @@ AppAssistant.prototype.importOpml = function(opml) {
 		}
 	} catch (e){
 		Mojo.Log.error("error with OPML: (%s)", e);
-		Util.showError($L({value:"Error parsing OPML File", key:"errorParsingOPML"}), $L({value:"There was an error parsing the OPML file.  Please send the file to curator@webosarchive.org.", key:"errorParsingOPMLBody"}));
+		Util.showError($L({value:"Error parsing OPML File", key:"errorParsingOPML"}), $L({value:"There was an error parsing the OPML file.  Please send the file to webosarchive@gmail.com.", key:"errorParsingOPMLBody"}));
 	}
 };
 
@@ -277,7 +277,7 @@ AppAssistant.prototype.handleCommand = function(event) {
 					}.bind(this),
 					function() {
 						var dialog = new drnull.Dialog.Info(event.assistant, $L({value:"Sorry for the inconvenience!", key:"sorry1"}),
-							$L({value:"I hope you can resolve your problem.  Please contact curator@webosarchive.org if you need further assistance.", key:"sorry2"}));
+							$L({value:"I hope you can resolve your problem.  Please contact webosarchive@gmail.com if you need further assistance.", key:"sorry2"}));
 						dialog.show();
 					}.bind(this));
 				dialog.show();

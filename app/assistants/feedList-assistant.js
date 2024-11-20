@@ -659,7 +659,7 @@ FeedListAssistant.prototype.importOpml = function(opml) {
         }
     } catch (e){
         Mojo.Log.error("error with OPML: (%s)", e);
-        Util.showError($L({value:"Error parsing OPML File", key:"errorParsingOPML"}), $L({value:"There was an error parsing the OPML file.  Please send the file to curator@webosarchive.org.", key:"errorParsingOPMLBody"}));
+        Util.showError($L({value:"Error parsing OPML File", key:"errorParsingOPML"}), $L({value:"There was an error parsing the OPML file.  Please send the file to webosarchive@gmail.com.", key:"errorParsingOPMLBody"}));
     }
 };
 

@@ -6,7 +6,7 @@
 
   "title":"drPodder Redux",
   "vendor":"Jon W",
-  "vendoremail":"curator@webosarchive.org",
+  "vendoremail":"webosarchive@gmail.com",
   "vendorurl":"http://www.webosarchive.org/drpodder",
 
   "main":"index.html",
@@ -24,7 +24,7 @@
 
   "support": {
     "email": {
-      "address": "curator@webosarchive.org",
+      "address": "webosarchive@gmail.com",
       "subject": "Support for drPodder Redux"
     }
   },
