@@ -1,12 +1,10 @@
 var LastSearchKeyword = "";
 var UseTinyFeed = true;
 var MaxEpisodes = 25;
-var shareServiceModel = null;
 
 function FeedSearchAssistant() {
 	this.searchService = "wosaPodcastDirectorySearch";
 	this.searchServices = {"wosaPodcastDirectorySearch": new wosaPodcastDirectorySearch()};
-	shareServiceModel = new ShareServiceModel();
 }
 
 FeedSearchAssistant.prototype.setup = function() {
@@ -125,8 +123,6 @@ FeedSearchAssistant.prototype.activate = function() {
 	this.focusChanges = Mojo.Event.listenForFocusChanges(this.keywordField, this.focusChangeHandler);
 	if (DrPodder.PodcastSearchText != null && DrPodder.PodcastSearchResults != null) {
 		this.showPreviousSearchResults(DrPodder.PodcastSearchResults);
-	} else {
-		this.getUserRecommendations();
 	}
 };
 
@@ -190,8 +186,6 @@ FeedSearchAssistant.prototype.keywordChange = function(event) {
 					Util.showError($L({value:"No Results Found", key:"noResults"}), $L({value:"Please try a different keyword, or ask the service provider to add your feed.", key:"tryDifferentKeyword"}));
 				}
 			}.bind(this));
-		} else {
-			this.getUserRecommendations();
 		}
 	}
 };
@@ -223,37 +217,6 @@ FeedSearchAssistant.prototype.backTap = function(event)
 	DrPodder.PodcastSearchResults = null;
 	LastSearchKeyword = null;
 };
-
-FeedSearchAssistant.prototype.getUserRecommendations = function() {
-    Mojo.Log.info("Getting User Recommendations from Sharing Service...");
-	this.controller.get('spinnerLoad').mojo.start();
-	this.controller.get("divResultsList").style.display = "none";
-    shareServiceModel.DoShareListRequest(function(response) {
-        try {
-            var responseObj = JSON.parse(response);
-            if (responseObj.shares) {
-                var sharedItems = [];
-                for (var i = 0; i < responseObj.shares.length; i++) {
-                    //Mojo.Log.info("shared item: " + JSON.stringify(responseObj.shares[i]));
-                    if (responseObj.shares[i].content)
-                        sharedItems.push(responseObj.shares[i].content)
-                }
-				if (sharedItems.length > 0) {
-					this.controller.get('spinnerLoad').mojo.stop();
-					this.controller.get("spnResultsTitle").innerHTML = "Recommended by webOS Users";
-					this.controller.get("divResultsList").style.display = "block";
-
-					this.listModel.items = sharedItems;
-					this.controller.modelChanged(this.listModel);
-				}
-            } else {
-                throw ("No items shared");
-            }
-        } catch (ex) {
-            Mojo.Log.warn("Shared recommendation list was empty or could not be loaded: " + ex);
-        }
-    }.bind(this));
-}
 
 FeedSearchAssistant.prototype.showPreviousSearchResults = function(results) {
 	this.listModel.items = results;

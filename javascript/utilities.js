@@ -227,7 +227,7 @@ Utilities.prototype.isDockmode = function() {
              "subscribe": false
          },
          onSuccess : function (e){ Mojo.Log.error("Status success, results="+JSON.stringify(e)); },
-         onFailure : function (e){ Mojo.Log.Errpr("Status failure, results="+JSON.stringify(e)); }
+         onFailure : function (e){ Mojo.Log.error("Status failure, results="+JSON.stringify(e)); }
     });
     return false; // xx.
 }

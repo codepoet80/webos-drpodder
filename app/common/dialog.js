@@ -97,7 +97,7 @@ drnull.Dialog.Choice = Class.create(drnull.Dialog.BaseDialog, {
 	},
 	onChoose: function(value) {
 		Mojo.Log.warn("Confirm.onChoose(" + value + ") called");
-		handler = this.handlers[i];
+		handler = this.handlers[value];
 		if (!handler) {handler = this.handlers[this.handlers.length-1];}
 		if (handler) {handler();}
 		else {Mojo.Log.error("drnull.Dialog.Choice: could not find handler for " + value);}

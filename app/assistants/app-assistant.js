@@ -73,7 +73,7 @@ AppAssistant.prototype.handleLaunchParams = function(launchParams) {
 		case "updateFeeds":
 			this.setWakeup();
 			if (Prefs.autoUpdate && !downloadingDashboardOpen && !feedModel.updatingFeeds) {
-                if( (Prefs.autoUpdateFeedID == undefined) | (Prefs.autoUpdateFeedID == 'all') ) {
+                if( (Prefs.autoUpdateFeedID == undefined) || (Prefs.autoUpdateFeedID == 'all') ) {
                    Mojo.Log.error("info; launching: updateFeeds()");
                    feedModel.updateFeeds();
                 } else {
