@@ -406,6 +406,7 @@ EpisodeDetailsAssistant.prototype.backToList = function() {
 
     this.episodeObject.setListened();
     this.episodeObject.clearBookmark();
+    this.syncPlayback();   // push "played" to Pocket Casts if signed in
 
     if (feed.autoDelete && this.episodeObject.downloaded) {
         this.episodeObject.deleteFile();
@@ -730,15 +731,27 @@ EpisodeDetailsAssistant.prototype.handleAudioEvents = function(event) {
         case "play":
             this.setStatus();
             this.playGUI();
+            this.syncPlayback();
             break;
         case "pause":
             this.updateProgress();
             this.bookmark();
             this.pauseGUI();
+            this.syncPlayback();
             break;
         case "ended":
             this.backToList();
             break;
+    }
+};
+
+// Push the current episode's playback state to Pocket Casts (if signed in).
+// Called on play/pause; completion is pushed from backToList() after the
+// episode is marked listened. Push-only, so it won't disturb playback.
+EpisodeDetailsAssistant.prototype.syncPlayback = function() {
+    if (typeof SyncService !== "undefined" && SyncService.isEnabled() && this.episodeObject) {
+        try { SyncService.pushEpisode(this.episodeObject); }
+        catch (e) { Mojo.Log.error("syncPlayback error: %j", e); }
     }
 };
 

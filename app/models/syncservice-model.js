@@ -205,6 +205,15 @@ SyncServiceClass.prototype.flush = function(callback) {
     });
 };
 
+// Queue this episode's current state and immediately flush (push only).
+// Used for near-real-time updates on play/pause/complete. Never pulls, so it
+// can't clobber the position of the episode currently playing.
+SyncServiceClass.prototype.pushEpisode = function(ep, callback) {
+    if (!this.isEnabled()) { if (callback) { callback(false, "not logged in"); } return; }
+    this.onEpisodeChanged(ep);
+    this.flush(callback);
+};
+
 // Full two-way sync: push local changes, then pull remote state.
 SyncServiceClass.prototype.syncNow = function(callback) {
     if (!this.isEnabled()) { if (callback) { callback(false, "not logged in"); } return; }

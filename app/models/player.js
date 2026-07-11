@@ -38,10 +38,28 @@ Player.prototype.getStatus = function() {
 
 Player.prototype.play = function() {
 	this.audioObject.play();
+	this.syncPlayback();
 };
 
 Player.prototype.pause = function() {
 	this.audioObject.pause();
+	// Persist the current position so the pushed state is accurate even when the
+	// episodeDetails scene (which normally bookmarks on pause) isn't active, e.g.
+	// when pausing from the dashboard.
+	if (this.episode && !isNaN(this.audioObject.currentTime)) {
+		this.episode.bookmark(Math.floor(this.audioObject.currentTime));
+	}
+	this.syncPlayback();
+};
+
+// Push the current episode's playback state to Pocket Casts (if signed in).
+// Push-only and de-duped, so calling it alongside the episodeDetails media-event
+// hooks is harmless. No-op unless the user has signed in.
+Player.prototype.syncPlayback = function() {
+	if (typeof SyncService !== "undefined" && SyncService.isEnabled() && this.episode) {
+		try { SyncService.pushEpisode(this.episode); }
+		catch (e) { Mojo.Log.error("Player.syncPlayback error: %j", e); }
+	}
 };
 
 Player.prototype.skip = function(secs) {
