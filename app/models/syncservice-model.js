@@ -17,7 +17,8 @@
 
 function SyncServiceClass() {
     this.applyingPull = false;   // guard so applying a pull doesn't re-queue pushes
-    this.busy = false;
+    this.busy = false;           // a flush+pull is in flight (serializes syncs)
+    this.lastSyncAt = 0;         // ms timestamp of the last completed sync (throttle)
 }
 
 SyncServiceClass.prototype.DEFAULT_BASE = "http://podcasts.webosarchive.org/sync/";
@@ -295,14 +296,36 @@ SyncServiceClass.prototype.pushEpisode = function(ep, callback) {
     this.flush(callback);
 };
 
-// Full two-way sync: push local changes, then pull remote state.
+// Full two-way sync: push local changes, then pull remote state. Serialized via
+// `busy` so overlapping triggers (rapid navigation, feed refresh) can't stack up
+// concurrent flush+pull chains against the service.
 SyncServiceClass.prototype.syncNow = function(callback) {
     if (!this.isEnabled()) { if (callback) { callback(false, "not logged in"); } return; }
+    if (this.busy) { if (callback) { callback(false, "sync already in progress"); } return; }
+    this.busy = true;
     this.flush(function(ok, info) {
         this.pull(function(pok, pinfo) {
+            this.busy = false;
+            this.lastSyncAt = (new Date()).getTime();
             if (callback) { callback(pok, pinfo); }
-        });
+        }.bind(this));
     }.bind(this));
+};
+
+// Automatic sync for UI triggers (returning to the feed list, a feed just added,
+// etc). Bails when disabled or a sync is already running, and throttles routine
+// triggers so casual navigation doesn't hammer the service. Pass force=true right
+// after a feed is added so the new podcast's playback state comes down at once.
+SyncServiceClass.prototype.AUTO_SYNC_MIN_INTERVAL = 90000;   // ms between auto syncs
+SyncServiceClass.prototype.autoSync = function(force, callback) {
+    if (!this.isEnabled()) { if (callback) { callback(false, "not logged in"); } return; }
+    if (this.busy) { if (callback) { callback(false, "busy"); } return; }
+    if (!force && this.lastSyncAt &&
+        ((new Date()).getTime() - this.lastSyncAt) < this.AUTO_SYNC_MIN_INTERVAL) {
+        if (callback) { callback(false, "throttled"); }
+        return;
+    }
+    this.syncNow(callback);
 };
 
 var SyncService = new SyncServiceClass();

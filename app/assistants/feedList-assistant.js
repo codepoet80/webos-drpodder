@@ -140,7 +140,13 @@ FeedListAssistant.prototype.activate = function(result) {
             var feed = new Feed();
             feed.title = result.feedToAdd.title;
             feed.url = result.feedToAdd.url;
-            feed.update(function() {});
+            // This feed loads its episodes asynchronously; sync once they're in
+            // so Pocket Casts playback state can land on the new episodes.
+            feed.update(function() {
+                if (typeof SyncService !== "undefined" && SyncService.isEnabled()) {
+                    SyncService.autoSync(true, function() {});
+                }
+            });
             feedModel.add(feed);
             result.feedAdded = true;
         }
@@ -155,6 +161,20 @@ FeedListAssistant.prototype.activate = function(result) {
         }
     } else {
         // this.feedList.mojo.revealItem(feedModel.items.length-1, true); //  XX
+    }
+
+    // Sync with Pocket Casts whenever the feed list comes back to the top. A
+    // manually-added feed (episodes already loaded in the add scene) forces an
+    // immediate sync; the directory path above syncs in its own load callback;
+    // any other return to the list gets a throttled, opportunistic sync. Skipped
+    // while a full refresh is running -- that runs its own sync when it finishes.
+    if (typeof SyncService !== "undefined" && SyncService.isEnabled() &&
+        !(result && result.feedToAdd)) {
+        if (result && result.feedAdded) {
+            SyncService.autoSync(true, function() {});
+        } else if (!feedModel.updatingFeeds) {
+            SyncService.autoSync(false, function() {});
+        }
     }
 
     if (this.foregroundVolumeMarker) {
