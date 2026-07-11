@@ -234,7 +234,7 @@ PreferencesAssistant.prototype.localize = function() {
     Util.localize(this, "episodeListSettings", "Episode List Settings", "episodeListSettings");
     Util.localize(this, "singleTap", "Enable Single Tap", "singleTap");
     Util.localize(this, "advancedSettings", "Advanced Settings", "advancedSettings");
-    Util.localize(this, "pcSyncSettings", "Pocket Casts Sync (optional)", "pcSyncSettings");
+    Util.localize(this, "pcSyncSettings", "Pocket Casts Sync", "pcSyncSettings");
 };
 
 PreferencesAssistant.prototype.activate = function() {
