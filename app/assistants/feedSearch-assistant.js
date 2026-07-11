@@ -1,15 +1,10 @@
 var LastSearchKeyword = "";
-// Tiny feeds are required on older, memory-limited devices without modern TLS.
-// The TouchPad (webOS 3.x) has modern TLS and more memory, so it defaults to the
-// FULL feed — that keeps feed/enclosure URLs identical to the publisher's, which
-// is what makes Pocket Casts sync able to match episodes.
+// Tiny feeds are the default on ALL devices: even the TouchPad's downloadManager
+// lacks modern TLS, so it can't fetch full feeds' https enclosures — mp3.php
+// proxies them. Tiny feeds are also truncated, which keeps large podcasts fast.
+// Pocket Casts sync therefore matches episodes by TITLE (proxied enclosure URLs
+// don't match the publisher's), handled in syncservice-model.js.
 var UseTinyFeed = true;
-try {
-    if (Mojo.Environment && Mojo.Environment.DeviceInfo &&
-        Mojo.Environment.DeviceInfo.platformVersionMajor >= 3) {
-        UseTinyFeed = false;
-    }
-} catch (e) {}
 var MaxEpisodes = 25;
 
 function FeedSearchAssistant() {

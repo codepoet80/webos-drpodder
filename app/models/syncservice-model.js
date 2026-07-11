@@ -47,9 +47,14 @@ SyncServiceClass.prototype.isEnabled = function() {
     return this.isSupported() && !!Prefs.pcSyncToken;
 };
 
-// Normalize an episode title for matching (lowercase, collapse whitespace).
+// Normalize an episode title for matching. Title is the primary sync key because
+// tiny-feed enclosure URLs are proxied (mp3.php) and never match Pocket Casts.
+// Lowercase, decode common HTML entities, and collapse whitespace.
 SyncServiceClass.prototype.normTitle = function(t) {
-    return (t || "").toLowerCase().replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "");
+    t = (t || "").toLowerCase();
+    t = t.replace(/&amp;/g, "&").replace(/&quot;/g, '"')
+         .replace(/&#39;/g, "'").replace(/&apos;/g, "'").replace(/&nbsp;/g, " ");
+    return t.replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "");
 };
 
 // ---- auth ----------------------------------------------------------------
