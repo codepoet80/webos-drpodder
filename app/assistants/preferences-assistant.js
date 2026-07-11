@@ -351,8 +351,16 @@ PreferencesAssistant.prototype.pcSyncNow = function(event) {
     var button = this.controller.get("pcSyncNowButton");
     SyncService.syncNow(function(ok, info) {
         if (button.mojo) { button.mojo.deactivate(); }
-        if (ok) { Util.banner("Sync complete"); }
-        else { Util.showError("Sync Failed", info || "Could not sync."); }
+        if (ok) {
+            var pending = SyncService.pendingCount();
+            if (pending) {
+                Util.banner(pending + " change(s) couldn't reach Pocket Casts — kept locally, will retry");
+            } else {
+                Util.banner("Sync complete");
+            }
+        } else {
+            Util.showError("Sync Failed", info || "Could not sync.");
+        }
     });
 };
 

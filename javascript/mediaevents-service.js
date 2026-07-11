@@ -15,20 +15,34 @@ MediaEventsService.prototype._serviceRequest = function(sceneController, uri, pa
 	}
 };
 
+// Some webOS builds don't permit third-party apps to subscribe to the media /
+// headset key services (LS2 returns "Not permitted to send to com.palm.mediaevents").
+// That's expected and harmless -- on-screen controls still work -- so swallow the
+// failure quietly instead of letting Mojo surface it as an unhandled service error.
+MediaEventsService.prototype._onRegisterFailure = function(e) {
+	Mojo.Log.info("MediaEventsService: media keys unavailable (%s)",
+	              (e && e.errorText) || "not permitted");
+};
+
 MediaEventsService.prototype.registerForMediaEvents = function(sceneController, callback) {
+	var onFailure = this._onRegisterFailure.bind(this);
+
 	var req = this._serviceRequest(sceneController, this.MEDIA_KEYS_URI, {
 		method: "status",
 		onSuccess: callback,
+		onFailure: onFailure,
 		parameters: {"subscribe": true}});
 
 	req = this._serviceRequest(sceneController, this.HEADSET_KEYS_URI, {
 		method: "status",
 		onSuccess: callback,
+		onFailure: onFailure,
 		parameters: {"subscribe": true}});
 
 	return this._serviceRequest(sceneController, this.URI, {
 		method: "mediaEvents",
 		onSuccess: callback,
+		onFailure: onFailure,
 		parameters: {"appName": Mojo.appName, "subscribe": true}});
 };
 

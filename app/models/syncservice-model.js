@@ -82,6 +82,13 @@ SyncServiceClass.prototype.login = function(email, password, callback) {
     });
 };
 
+// Number of local changes still waiting to reach Pocket Casts (failed/retrying
+// pushes). Non-zero after a sync means the push leg didn't fully land -- callers
+// surface this so a silent push failure can't masquerade as "all synced".
+SyncServiceClass.prototype.pendingCount = function() {
+    return (Prefs.pcSyncQueue || []).length;
+};
+
 SyncServiceClass.prototype.logout = function() {
     Prefs.pcSyncToken = null;
     Prefs.pcSyncQueue = [];
@@ -129,7 +136,17 @@ SyncServiceClass.prototype.applyPull = function(episodes) {
         if (e.title) { byTitle[this.normTitle(e.title)] = e; }
     }.bind(this));
 
-    var changed = 0;
+    // Newer-wins reconciliation. A local change still sitting in the push queue
+    // hasn't been confirmed to Pocket Casts yet, so it is by definition newer
+    // than whatever state the server last acknowledged -- it must win over this
+    // pull rather than be clobbered by it. (We reconcile on "unsynced local
+    // change" instead of comparing epoch timestamps because cross-device clocks
+    // on retro webOS hardware are unreliable.) Successfully-pushed items have
+    // already been dropped from the queue by flush(), so the pull applies to
+    // them normally; only genuinely-pending edits are protected.
+    var pending = this.pendingKeys();
+
+    var changed = 0, kept = 0;
     this.applyingPull = true;
     try {
         feedModel.items.forEach(function(feed) {
@@ -138,13 +155,35 @@ SyncServiceClass.prototype.applyPull = function(episodes) {
                 var rec = (ep.enclosure && byEnclosure[ep.enclosure]) ||
                           (ep.title && byTitle[this.normTitle(ep.title)]);
                 if (!rec) { return; }
+                if (this.isPending(ep, pending)) { kept++; return; }
                 if (this.applyRecordToEpisode(ep, rec)) { changed++; }
             }.bind(this));
         }.bind(this));
     } finally {
         this.applyingPull = false;
     }
+    if (kept) {
+        Mojo.Log.info("SyncService.applyPull kept %d unsynced local change(s)", kept);
+    }
     return changed;
+};
+
+// Build a lookup of episodes that have an unflushed local change (still queued
+// for push), keyed both by enclosure URL and by normalized episode title so a
+// pull can recognize the same episode regardless of which key it matched on.
+SyncServiceClass.prototype.pendingKeys = function() {
+    var byEnclosure = {}, byTitle = {};
+    (Prefs.pcSyncQueue || []).forEach(function(r) {
+        if (r.enclosureUrl) { byEnclosure[r.enclosureUrl] = true; }
+        if (r.episodeTitle) { byTitle[this.normTitle(r.episodeTitle)] = true; }
+    }.bind(this));
+    return {byEnclosure: byEnclosure, byTitle: byTitle};
+};
+
+// True if this local episode has a change queued for push (see pendingKeys).
+SyncServiceClass.prototype.isPending = function(ep, pending) {
+    return !!((ep.enclosure && pending.byEnclosure[ep.enclosure]) ||
+              (ep.title && pending.byTitle[this.normTitle(ep.title)]));
 };
 
 SyncServiceClass.prototype.applyRecordToEpisode = function(ep, rec) {
@@ -188,6 +227,8 @@ SyncServiceClass.prototype.onEpisodeChanged = function(ep) {
     });
     Prefs.pcSyncQueue.push(rec);
     DB.writePrefs();
+    Mojo.Log.info("SyncService.queued status=%d pos=%d feed=[%s] ep=[%s] enc=[%s]",
+                  rec.playingStatus, rec.playedUpTo, rec.title, rec.episodeTitle, rec.enclosureUrl);
 };
 
 SyncServiceClass.prototype.flush = function(callback) {
@@ -210,7 +251,12 @@ SyncServiceClass.prototype.flush = function(callback) {
             // Drop items that succeeded; keep failures for retry.
             var failed = {};
             (resp.results || []).forEach(function(r) {
-                if (!r.ok) { failed[r.enclosureUrl] = true; }
+                if (!r.ok) {
+                    failed[r.enclosureUrl] = true;
+                    Mojo.Log.warn("SyncService.flush push FAILED [%s]: %s", r.enclosureUrl, r.error);
+                } else {
+                    Mojo.Log.info("SyncService.flush push ok [%s]", r.enclosureUrl);
+                }
             });
             Prefs.pcSyncQueue = queue.filter(function(r) { return failed[r.enclosureUrl]; });
             DB.writePrefs();
