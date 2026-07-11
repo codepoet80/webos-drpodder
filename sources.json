@@ -46,6 +46,7 @@
     {"source": "app\/common\/dialog.js"},
     {"source": "app\/models\/device.js"},
     {"source": "app\/models\/directoryservice-model.js"},
+    {"source": "app\/models\/syncservice-model.js"},
     {"source": "app\/models\/asyncWrappers.js"},
     { "source": "app\/models\/system-model.js" },
     { "source": "app\/models\/updater-model.js" }

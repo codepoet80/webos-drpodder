@@ -171,6 +171,28 @@ PreferencesAssistant.prototype.setup = function() {
         {},
         { value : Prefs.singleTap });
 
+    // Pocket Casts sync (optional)
+    this.controller.setupWidget("pcSyncEmailField",
+        { hintText: "Pocket Casts email", textFieldName: "pcSyncEmail",
+          enterSubmits: false, autoFocus: false, requiresEnterKey: false },
+        { value: Prefs.pcSyncEmail || "" });
+    this.controller.setupWidget("pcSyncPasswordField",
+        { hintText: "Password", enterSubmits: false },
+        { value: "" });
+    this.controller.setupWidget("pcSyncLoginButton",
+        { type: Mojo.Widget.activityButton },
+        { label: "Sign In", buttonClass: "affirmative", disabled: false });
+    this.controller.setupWidget("pcSyncNowButton",
+        { type: Mojo.Widget.activityButton },
+        { label: "Sync Now", buttonClass: "", disabled: false });
+    this.controller.setupWidget("pcSyncLogoutButton",
+        {},
+        { label: "Sign Out", buttonClass: "negative", disabled: false });
+
+    this.pcSyncLoginHandler = this.pcSyncLogin.bind(this);
+    this.pcSyncNowHandler = this.pcSyncNow.bind(this);
+    this.pcSyncLogoutHandler = this.pcSyncLogout.bind(this);
+
     this.themePreferenceHandler = this.themePreference.bind(this);
     this.freeRotationHandler = this.freeRotation.bind(this);
     this.autoUpdateHandler = this.autoUpdate.bind(this);
@@ -212,6 +234,7 @@ PreferencesAssistant.prototype.localize = function() {
     Util.localize(this, "episodeListSettings", "Episode List Settings", "episodeListSettings");
     Util.localize(this, "singleTap", "Enable Single Tap", "singleTap");
     Util.localize(this, "advancedSettings", "Advanced Settings", "advancedSettings");
+    Util.localize(this, "pcSyncSettings", "Pocket Casts Sync (optional)", "pcSyncSettings");
 };
 
 PreferencesAssistant.prototype.activate = function() {
@@ -232,6 +255,10 @@ PreferencesAssistant.prototype.activate = function() {
     Mojo.Event.listen(this.controller.get('simpleToggle'),Mojo.Event.propertyChange,this.simpleHandler);
     Mojo.Event.listen(this.controller.get('singleTapToggle'),Mojo.Event.propertyChange,this.singleTapHandler);
     // Mojo.Event.listen(this.controller.get('infomodusToggle'),Mojo.Event.propertyChange,this.infomodusHandler);
+    Mojo.Event.listen(this.controller.get('pcSyncLoginButton'),Mojo.Event.tap,this.pcSyncLoginHandler);
+    Mojo.Event.listen(this.controller.get('pcSyncNowButton'),Mojo.Event.tap,this.pcSyncNowHandler);
+    Mojo.Event.listen(this.controller.get('pcSyncLogoutButton'),Mojo.Event.tap,this.pcSyncLogoutHandler);
+    this.updateSyncVisibility();
 };
 
 PreferencesAssistant.prototype.backTap = function(event)
@@ -258,7 +285,58 @@ PreferencesAssistant.prototype.deactivate = function() {
     Mojo.Event.stopListening(this.controller.get('simpleToggle'),Mojo.Event.propertyChange,this.simpleHandler);
     Mojo.Event.stopListening(this.controller.get('singleTapToggle'),Mojo.Event.propertyChange,this.singleTapHandler);
     // Mojo.Event.stopListening(this.controller.get('infomodusToggle'),Mojo.Event.propertyChange,this.infomodusHandler);
+    Mojo.Event.stopListening(this.controller.get('pcSyncLoginButton'),Mojo.Event.tap,this.pcSyncLoginHandler);
+    Mojo.Event.stopListening(this.controller.get('pcSyncNowButton'),Mojo.Event.tap,this.pcSyncNowHandler);
+    Mojo.Event.stopListening(this.controller.get('pcSyncLogoutButton'),Mojo.Event.tap,this.pcSyncLogoutHandler);
     DB.writePrefs();
+};
+
+PreferencesAssistant.prototype.updateSyncVisibility = function() {
+    var loggedIn = (typeof SyncService !== "undefined") && SyncService.isEnabled();
+    if (loggedIn) {
+        this.controller.get("pcSyncLoggedOut").hide();
+        this.controller.get("pcSyncLoggedIn").show();
+        this.controller.get("pcSyncStatus").update("Signed in as " + (Prefs.pcSyncEmail || ""));
+    } else {
+        this.controller.get("pcSyncLoggedOut").show();
+        this.controller.get("pcSyncLoggedIn").hide();
+    }
+};
+
+PreferencesAssistant.prototype.pcSyncLogin = function(event) {
+    var email = this.controller.get("pcSyncEmailField").mojo.getValue();
+    var password = this.controller.get("pcSyncPasswordField").mojo.getValue();
+    var button = this.controller.get("pcSyncLoginButton");
+    if (!email || !password) {
+        Util.showError("Sign In", "Enter your Pocket Casts email and password.");
+        if (button.mojo) { button.mojo.deactivate(); }
+        return;
+    }
+    SyncService.login(email, password, function(ok, err) {
+        if (button.mojo) { button.mojo.deactivate(); }
+        if (ok) {
+            Util.banner("Signed in to Pocket Casts");
+            this.updateSyncVisibility();
+            SyncService.syncNow(function() {});
+        } else {
+            Util.showError("Sign In Failed", err || "Could not sign in.");
+        }
+    }.bind(this));
+};
+
+PreferencesAssistant.prototype.pcSyncNow = function(event) {
+    var button = this.controller.get("pcSyncNowButton");
+    SyncService.syncNow(function(ok, info) {
+        if (button.mojo) { button.mojo.deactivate(); }
+        if (ok) { Util.banner("Sync complete"); }
+        else { Util.showError("Sync Failed", info || "Could not sync."); }
+    });
+};
+
+PreferencesAssistant.prototype.pcSyncLogout = function(event) {
+    SyncService.logout();
+    this.updateSyncVisibility();
+    Util.banner("Signed out of Pocket Casts");
 };
 
 PreferencesAssistant.prototype.freeRotation = function(event) {

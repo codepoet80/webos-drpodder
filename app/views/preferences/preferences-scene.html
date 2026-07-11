@@ -115,6 +115,46 @@
 
 
 <div class="palm-group">
+    <div id="pcSyncSettings" class="palm-group-title">Pocket Casts Sync (optional)</div>
+    <div class="palm-list">
+        <div id="pcSyncLoggedOut">
+            <div class="palm-row first">
+                <div class="palm-row-wrapper">
+                    <div x-mojo-element="TextField" id="pcSyncEmailField"></div>
+                </div>
+            </div>
+            <div class="palm-row">
+                <div class="palm-row-wrapper">
+                    <div x-mojo-element="PasswordField" id="pcSyncPasswordField"></div>
+                </div>
+            </div>
+            <div class="palm-row last">
+                <div class="palm-row-wrapper">
+                    <div x-mojo-element="Button" id="pcSyncLoginButton"></div>
+                </div>
+            </div>
+        </div>
+        <div id="pcSyncLoggedIn">
+            <div class="palm-row first">
+                <div class="palm-row-wrapper">
+                    <div id="pcSyncStatus" class="title">Not signed in</div>
+                </div>
+            </div>
+            <div class="palm-row">
+                <div class="palm-row-wrapper">
+                    <div x-mojo-element="Button" id="pcSyncNowButton"></div>
+                </div>
+            </div>
+            <div class="palm-row last">
+                <div class="palm-row-wrapper">
+                    <div x-mojo-element="Button" id="pcSyncLogoutButton"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="palm-group">
     <div id="advancedSettings" class="palm-group-title">Advanced Settings</div>
    	<div class="palm-list">
 

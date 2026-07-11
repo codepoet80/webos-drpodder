@@ -260,6 +260,7 @@ Episode.prototype.setListened = function(ignore) {
         this.updateUIElements(ignore);
         this.save(ignore);
         this.feedObject.episodeListened(ignore);
+        this.syncChanged();
     }
 };
 
@@ -269,6 +270,16 @@ Episode.prototype.setUnlistened = function(ignore) {
         this.updateUIElements(ignore);
         this.save(ignore);
         this.feedObject.episodeUnlistened(ignore);
+        this.syncChanged();
+    }
+};
+
+// Notify the optional Pocket Casts sync service that playback state changed.
+// No-op unless the user has logged in (see syncservice-model.js).
+Episode.prototype.syncChanged = function() {
+    if (typeof SyncService !== "undefined") {
+        try { SyncService.onEpisodeChanged(this); }
+        catch (e) { Mojo.Log.error("syncChanged error: %j", e); }
     }
 };
 
@@ -295,6 +306,7 @@ Episode.prototype.bookmark = function(pos, functionWhenFinished) {
     if (newBookmark) {
         this.feedObject.episodeBookmarked();
     }
+    this.syncChanged();
 };
 
 Episode.prototype.clearBookmark = function(ignore) {
@@ -304,6 +316,7 @@ Episode.prototype.clearBookmark = function(ignore) {
         this.feedObject.episodeBookmarkCleared();
         this.updateUIElements(ignore);
         this.save(ignore);
+        this.syncChanged();
     }
 };
 

@@ -549,6 +549,15 @@ DBClass.prototype.readPrefs = function() {
     if (Prefs.themePreference === undefined) {Prefs.themePreference = "palm-default"}
     if (Prefs.freeRotation === undefined) {Prefs.freeRotation = true; Prefs.firstRun = true;}
     if (Prefs.transition === undefined) {Prefs.transition = Mojo.Transition.none;}
+
+    // Optional Pocket Casts sync (see syncservice-model.js). Disabled by default:
+    // no token means the whole feature is off and drPodder behaves as before.
+    if (Prefs.pcSyncURLBase === undefined) {Prefs.pcSyncURLBase = "http://podcasts.webosarchive.org/sync/";}
+    if (Prefs.pcSyncToken === undefined) {Prefs.pcSyncToken = null;}
+    if (Prefs.pcSyncEmail === undefined) {Prefs.pcSyncEmail = "";}
+    if (Prefs.pcSyncQueue === undefined) {Prefs.pcSyncQueue = [];}
+    if (Prefs.pcSyncOnUpdate === undefined) {Prefs.pcSyncOnUpdate = true;}
+
     Prefs.systemTranslation = Mojo.Locale.getCurrentLocale();
     if (Prefs.translation === undefined) {
         Prefs.translation = Prefs.systemTranslation;
