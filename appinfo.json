@@ -1,11 +1,11 @@
 {
   "id":"com.drnull.drpodder",
 
-  "version":"1.5.7",
-  "versionreleasedate": "10-Sept-2022",
+  "version":"1.6.0",
+  "versionreleasedate": "11-July-2026",
 
   "title":"drPodder Redux",
-  "vendor":"Jon W",
+  "vendor":"codepoet",
   "vendoremail":"webosarchive@gmail.com",
   "vendorurl":"http://www.webosarchive.org/drpodder",
 
