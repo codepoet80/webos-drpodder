@@ -292,7 +292,14 @@ PreferencesAssistant.prototype.deactivate = function() {
 };
 
 PreferencesAssistant.prototype.updateSyncVisibility = function() {
-    var loggedIn = (typeof SyncService !== "undefined") && SyncService.isEnabled();
+    var supported = (typeof SyncService !== "undefined") && SyncService.isSupported();
+    if (!supported) {
+        // Sync is TouchPad-only; hide the whole section on older devices.
+        this.controller.get("pcSyncGroup").hide();
+        return;
+    }
+    this.controller.get("pcSyncGroup").show();
+    var loggedIn = SyncService.isEnabled();
     if (loggedIn) {
         this.controller.get("pcSyncLoggedOut").hide();
         this.controller.get("pcSyncLoggedIn").show();

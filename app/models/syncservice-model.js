@@ -31,13 +31,34 @@ SyncServiceClass.prototype.base = function() {
     return Prefs.pcSyncURLBase || this.DEFAULT_BASE;
 };
 
+// Sync is a TouchPad (webOS 3.x+) feature only: older devices use tiny feeds,
+// whose proxied/truncated URLs don't match Pocket Casts. On those devices this
+// returns false and the whole feature stays inert.
+SyncServiceClass.prototype.isSupported = function() {
+    try {
+        return !!(Mojo.Environment && Mojo.Environment.DeviceInfo &&
+                  Mojo.Environment.DeviceInfo.platformVersionMajor >= 3);
+    } catch (e) {
+        return false;
+    }
+};
+
 SyncServiceClass.prototype.isEnabled = function() {
-    return !!Prefs.pcSyncToken;
+    return this.isSupported() && !!Prefs.pcSyncToken;
+};
+
+// Normalize an episode title for matching (lowercase, collapse whitespace).
+SyncServiceClass.prototype.normTitle = function(t) {
+    return (t || "").toLowerCase().replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "");
 };
 
 // ---- auth ----------------------------------------------------------------
 
 SyncServiceClass.prototype.login = function(email, password, callback) {
+    if (!this.isSupported()) {
+        if (callback) { callback(false, "Pocket Casts sync requires a TouchPad (webOS 3.0+)."); }
+        return;
+    }
     var url = this.base() + "login";   // base ends in "/"
     Mojo.Log.info("SyncService.login(%s)", email);
     new Ajax.Request(url, {
@@ -105,12 +126,16 @@ SyncServiceClass.prototype.pull = function(callback) {
     });
 };
 
-// Apply pulled playback state to local episodes, matched by enclosure URL.
-// Returns the number of episodes changed.
+// Apply pulled playback state to local episodes. Matches by enclosure URL first
+// (full feeds share the publisher's URLs with Pocket Casts), then by episode
+// title as a fallback. Returns the number of episodes changed.
 SyncServiceClass.prototype.applyPull = function(episodes) {
-    // index remote records by enclosure URL for O(1) lookup
     var byEnclosure = {};
-    episodes.forEach(function(e) { if (e.enclosureUrl) { byEnclosure[e.enclosureUrl] = e; } });
+    var byTitle = {};
+    episodes.forEach(function(e) {
+        if (e.enclosureUrl) { byEnclosure[e.enclosureUrl] = e; }
+        if (e.title) { byTitle[this.normTitle(e.title)] = e; }
+    }.bind(this));
 
     var changed = 0;
     this.applyingPull = true;
@@ -118,7 +143,8 @@ SyncServiceClass.prototype.applyPull = function(episodes) {
         feedModel.items.forEach(function(feed) {
             if (!feed.episodes) { return; }
             feed.episodes.forEach(function(ep) {
-                var rec = ep.enclosure && byEnclosure[ep.enclosure];
+                var rec = (ep.enclosure && byEnclosure[ep.enclosure]) ||
+                          (ep.title && byTitle[this.normTitle(ep.title)]);
                 if (!rec) { return; }
                 if (this.applyRecordToEpisode(ep, rec)) { changed++; }
             }.bind(this));
@@ -158,7 +184,8 @@ SyncServiceClass.prototype.onEpisodeChanged = function(ep) {
     var rec = {
         feedUrl: ep.feedObject.url,
         enclosureUrl: ep.enclosure,
-        title: ep.feedObject.title,
+        title: ep.feedObject.title,       // podcast/feed title -> resolve podcast
+        episodeTitle: ep.title,           // episode title -> resolve episode fallback
         playingStatus: status,
         playedUpTo: ep.position || 0
     };
