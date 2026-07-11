@@ -1353,6 +1353,13 @@ FeedModel.prototype.updateFeeds = function(feedIndex) {
         Mojo.Controller.getAppController().sendToNotificationChain({
             type: "feedsUpdating", value: false});
         AppAssistant.powerService.activityEnd(null, "FeedsUpdating");
+
+        // After every feed refresh (user-initiated or scheduled), sync playback
+        // state with Pocket Casts if the user is signed in.
+        if (typeof SyncService !== "undefined" && SyncService.isEnabled() &&
+            Prefs.pcSyncOnUpdate) {
+            SyncService.syncNow(function() {});
+        }
     }
 };
 

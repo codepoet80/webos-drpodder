@@ -16,6 +16,7 @@ FeedListAssistant.prototype.appMenuModel = {
                  {label: $L({value:"Export to Clipboard",      key:"exportClipDrpodder"}), command: "export-clipboard-cmd"},
                  {label: $L({value:"Export via Email",         key:"exportDrpodder"}), command: "export-cmd"}]
         },
+        {label: $L({value:"Sync with Pocket Casts", key:"syncPocketCasts"}), command: "pcsync-cmd"},
         {label: $L("Preferences"), command: "prefs-cmd"},
         {label: $L({value:"Report a Problem", key:"reportProblem"}), command: "report-cmd"},
         //{label: $L("Help"), command: "help-cmd"}
@@ -23,8 +24,8 @@ FeedListAssistant.prototype.appMenuModel = {
 };
 
 FeedListAssistant.prototype.addMenuModel = {
-    items: [{label: $L({value:"Add Feed URL", key:"enterFeedURL"}), command: "add-feed"},
-            {label: $L({value:"Search Directory", key:"searchDirectory"}), iconPath: "images/directory-menu.png", command: "feed-search"},
+    items: [{label: $L({value:"Search Directory", key:"searchDirectory"}), iconPath: "images/directory-menu.png", command: "feed-search"},
+            {label: $L({value:"Add Feed URL", key:"enterFeedURL"}), command: "add-feed"},
             {label: $L({value:"Add Default Feeds", key:"addDefaultFeeds"}), command: "addDefault-cmd"},
             {label: $L({value:"Add Local Media", key:"addLocalMedia"}), command: "add-local"},
             {label: $L({value:"Dynamic Playlist", key:"dynamicPlaylist"}), command: "add-playlist"},
@@ -476,6 +477,18 @@ FeedListAssistant.prototype.handleCommand = function(event) {
                 break;
             case "refresh-cmd":
                 this.updateFeeds();
+                break;
+            case "pcsync-cmd":
+                if (typeof SyncService !== "undefined" && SyncService.isEnabled()) {
+                    Util.banner($L("Syncing with Pocket Casts") + "...");
+                    SyncService.syncNow(function(ok, info) {
+                        if (ok) { Util.banner($L("Pocket Casts sync complete")); }
+                        else { Util.showError($L("Sync Failed"), info || $L("Could not sync with Pocket Casts.")); }
+                    });
+                } else {
+                    this.ShowDialogBox($L("Pocket Casts Sync"),
+                        "Keep your played and in-progress episodes in sync with a Pocket Casts account, so your listening progress follows you between drPodder and the Pocket Casts app on your other devices.<br><br>To turn it on, open <b>Preferences &rarr; Pocket Casts Sync</b> and sign in with your Pocket Casts email and password. After that, drPodder syncs automatically whenever your feeds refresh — or any time you pick <b>Sync with Pocket Casts</b> from this menu.");
+                }
                 break;
             case "filterField-cmd":
                   // open virt keyboard, see https://developer.palm.com/distribution/viewtopic.php?f=11&t=17285
