@@ -174,12 +174,15 @@ PreferencesAssistant.prototype.setup = function() {
     // Pocket Casts sync (optional)
     this.controller.setupWidget("pcSyncEmailField",
         { hintText: "Pocket Casts email", textFieldName: "pcSyncEmail",
+          limitResize: true,
           enterSubmits: false, autoFocus: false, requiresEnterKey: false,
-          autoReplace: false, textReplacement: false, autoCapitalization: false
+          autoReplace: false, textReplacement: false, autoCapitalization: false, textCase: Mojo.Widget.steModeLowerCase
         },
         { value: Prefs.pcSyncEmail || "" });
     this.controller.setupWidget("pcSyncPasswordField",
-        { hintText: "Password", enterSubmits: false },
+        { hintText: "Password", limitResize: true,
+          autoReplace: false, autoCapitalization: false, textCase: Mojo.Widget.steModeLowerCase,
+          enterSubmits: false },
         { value: "" });
     this.controller.setupWidget("pcSyncLoginButton",
         { type: Mojo.Widget.activityButton },

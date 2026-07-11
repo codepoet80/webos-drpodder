@@ -113,19 +113,24 @@
    </div>
 </div>
 
-
 <div id="pcSyncGroup" class="palm-group">
-    <div id="pcSyncSettings" class="palm-group-title">Pocket Casts Sync (optional)</div>
+    <div id="pcSyncSettings" class="palm-group-title">Pocket Casts Sync</div>
     <div class="palm-list">
         <div id="pcSyncLoggedOut">
             <div class="palm-row first">
-                <div class="palm-row-wrapper">
-                    <div x-mojo-element="TextField" id="pcSyncEmailField"></div>
+                <div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+                    <div class="title">
+                        <div id="pcSyncEmailLabel" class="label right">Email</div>
+                        <div x-mojo-element="TextField" id="pcSyncEmailField"></div>
+                    </div>
                 </div>
             </div>
             <div class="palm-row">
-                <div class="palm-row-wrapper">
-                    <div x-mojo-element="PasswordField" id="pcSyncPasswordField"></div>
+                <div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+                    <div class="title">
+                        <div id="pcSyncPasswordLabel" class="label right">Password</div>
+                        <div x-mojo-element="PasswordField" id="pcSyncPasswordField"></div>
+                    </div>
                 </div>
             </div>
             <div class="palm-row last">
