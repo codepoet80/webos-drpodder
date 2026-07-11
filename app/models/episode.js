@@ -61,6 +61,28 @@ Episode.prototype.loadFromXML = function(xmlObject) {
         this.guid = this.link + this.title + this.getDateString();
     }
     //Mojo.Log.info("episode %s, pubdate:%s, guid:%s", this.title, this.pubDate, this.guid);
+
+    // Parse itunes:duration so the in-progress (bookmark) bar can render before
+    // the media element has ever been loaded. The tag is either whole seconds
+    // ("1934") or a clock string ("MM:SS" or "HH:MM:SS"). Only fill length when
+    // we don't already have one -- a measured playback duration is more precise.
+    if (!this.length) {
+        var durStr = Util.xmlTagValue(xmlObject, "duration");
+        if (durStr) {
+            durStr = ("" + durStr).replace(/^\s+|\s+$/g, "");
+            var durSecs = 0;
+            if (durStr.indexOf(":") >= 0) {
+                var durParts = durStr.split(":");
+                for (var di = 0; di < durParts.length; di++) {
+                    durSecs = durSecs * 60 + (parseInt(durParts[di], 10) || 0);
+                }
+            } else {
+                durSecs = parseInt(durStr, 10) || 0;
+            }
+            if (durSecs > 0) { this.length = durSecs; }
+        }
+    }
+
     this.type = Util.xmlTagAttributeValue(xmlObject, "enclosure", "type");
 
     // override the type with what we parse from the filename, if it's obvious...

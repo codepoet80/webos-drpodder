@@ -191,13 +191,29 @@ SyncServiceClass.prototype.applyRecordToEpisode = function(ep, rec) {
     var status = rec.playingStatus;
     var pos = parseInt(rec.playedUpTo, 10) || 0;
 
+    // Seed the episode duration from Pocket Casts when we don't already know it.
+    // An episode never played on this device has length 0, so the in-progress
+    // (bookmark) bar would compute 0% and stay empty until playback finally loads
+    // the media. Knowing the duration up front lets the bar render immediately.
+    var dur = parseInt(rec.duration, 10) || 0;
+    if (dur > 0 && !ep.length) { ep.length = dur; changed = true; }
+
     if (status === this.PLAYED) {
         if (!ep.listened) { ep.setListened(false); changed = true; }
     } else {
         if (ep.listened) { ep.setUnlistened(false); changed = true; }
         // reflect in-progress position as a bookmark
-        if (pos > 0 && ep.position !== pos) { ep.bookmark(pos); changed = true; }
-        else if (pos === 0 && ep.position) { ep.clearBookmark(false); changed = true; }
+        if (pos === 0) {
+            if (ep.position) { ep.clearBookmark(false); changed = true; }
+        } else {
+            if (ep.position !== pos) { ep.bookmark(pos); changed = true; }
+            // bookmark() doesn't repaint the list row, and on a re-pull the
+            // position can be unchanged while the duration is newly known --
+            // recompute the bar width and, if anything changed, repaint in place.
+            var pct = ep.length ? (100 * pos / ep.length) : 0;
+            if (ep.bookmarkPercent !== pct) { ep.bookmarkPercent = pct; ep.save(false); changed = true; }
+            if (changed) { ep.updateUIElements(false); }
+        }
     }
     return changed;
 };
