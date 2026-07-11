@@ -174,7 +174,9 @@ PreferencesAssistant.prototype.setup = function() {
     // Pocket Casts sync (optional)
     this.controller.setupWidget("pcSyncEmailField",
         { hintText: "Pocket Casts email", textFieldName: "pcSyncEmail",
-          enterSubmits: false, autoFocus: false, requiresEnterKey: false },
+          enterSubmits: false, autoFocus: false, requiresEnterKey: false,
+          autoReplace: false, textReplacement: false, autoCapitalization: false
+        },
         { value: Prefs.pcSyncEmail || "" });
     this.controller.setupWidget("pcSyncPasswordField",
         { hintText: "Password", enterSubmits: false },
@@ -255,10 +257,21 @@ PreferencesAssistant.prototype.activate = function() {
     Mojo.Event.listen(this.controller.get('simpleToggle'),Mojo.Event.propertyChange,this.simpleHandler);
     Mojo.Event.listen(this.controller.get('singleTapToggle'),Mojo.Event.propertyChange,this.singleTapHandler);
     // Mojo.Event.listen(this.controller.get('infomodusToggle'),Mojo.Event.propertyChange,this.infomodusHandler);
-    Mojo.Event.listen(this.controller.get('pcSyncLoginButton'),Mojo.Event.tap,this.pcSyncLoginHandler);
-    Mojo.Event.listen(this.controller.get('pcSyncNowButton'),Mojo.Event.tap,this.pcSyncNowHandler);
-    Mojo.Event.listen(this.controller.get('pcSyncLogoutButton'),Mojo.Event.tap,this.pcSyncLogoutHandler);
+    this.listenIf('pcSyncLoginButton', Mojo.Event.tap, this.pcSyncLoginHandler);
+    this.listenIf('pcSyncNowButton', Mojo.Event.tap, this.pcSyncNowHandler);
+    this.listenIf('pcSyncLogoutButton', Mojo.Event.tap, this.pcSyncLogoutHandler);
     this.updateSyncVisibility();
+};
+
+// Attach a listener only if the element exists (guards against scene/JS drift).
+PreferencesAssistant.prototype.listenIf = function(id, event, handler) {
+    var el = this.controller.get(id);
+    if (el) { Mojo.Event.listen(el, event, handler); }
+};
+
+PreferencesAssistant.prototype.stopListeningIf = function(id, event, handler) {
+    var el = this.controller.get(id);
+    if (el) { Mojo.Event.stopListening(el, event, handler); }
 };
 
 PreferencesAssistant.prototype.backTap = function(event)
@@ -285,28 +298,30 @@ PreferencesAssistant.prototype.deactivate = function() {
     Mojo.Event.stopListening(this.controller.get('simpleToggle'),Mojo.Event.propertyChange,this.simpleHandler);
     Mojo.Event.stopListening(this.controller.get('singleTapToggle'),Mojo.Event.propertyChange,this.singleTapHandler);
     // Mojo.Event.stopListening(this.controller.get('infomodusToggle'),Mojo.Event.propertyChange,this.infomodusHandler);
-    Mojo.Event.stopListening(this.controller.get('pcSyncLoginButton'),Mojo.Event.tap,this.pcSyncLoginHandler);
-    Mojo.Event.stopListening(this.controller.get('pcSyncNowButton'),Mojo.Event.tap,this.pcSyncNowHandler);
-    Mojo.Event.stopListening(this.controller.get('pcSyncLogoutButton'),Mojo.Event.tap,this.pcSyncLogoutHandler);
+    this.stopListeningIf('pcSyncLoginButton', Mojo.Event.tap, this.pcSyncLoginHandler);
+    this.stopListeningIf('pcSyncNowButton', Mojo.Event.tap, this.pcSyncNowHandler);
+    this.stopListeningIf('pcSyncLogoutButton', Mojo.Event.tap, this.pcSyncLogoutHandler);
     DB.writePrefs();
 };
 
 PreferencesAssistant.prototype.updateSyncVisibility = function() {
-    var supported = (typeof SyncService !== "undefined") && SyncService.isSupported();
-    if (!supported) {
-        // Sync is TouchPad-only; hide the whole section on older devices.
-        this.controller.get("pcSyncGroup").hide();
-        return;
+    var self = this;
+    // Null-safe show/hide: a missing element must never throw and abort activate()
+    // (that left both the signed-in and signed-out panels visible at once).
+    function setVis(id, visible) {
+        var e = self.controller.get(id);
+        if (!e) { return; }
+        if (visible) { e.show(); } else { e.hide(); }
     }
-    this.controller.get("pcSyncGroup").show();
+    var supported = (typeof SyncService !== "undefined") && SyncService.isSupported();
+    setVis("pcSyncGroup", supported);          // TouchPad-only section
+    if (!supported) { return; }
     var loggedIn = SyncService.isEnabled();
+    setVis("pcSyncLoggedOut", !loggedIn);
+    setVis("pcSyncLoggedIn", loggedIn);
     if (loggedIn) {
-        this.controller.get("pcSyncLoggedOut").hide();
-        this.controller.get("pcSyncLoggedIn").show();
-        this.controller.get("pcSyncStatus").update("Signed in as " + (Prefs.pcSyncEmail || ""));
-    } else {
-        this.controller.get("pcSyncLoggedOut").show();
-        this.controller.get("pcSyncLoggedIn").hide();
+        var status = self.controller.get("pcSyncStatus");
+        if (status) { status.update("Signed in as " + (Prefs.pcSyncEmail || "")); }
     }
 };
 
