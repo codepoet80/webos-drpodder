@@ -316,10 +316,8 @@ PreferencesAssistant.prototype.updateSyncVisibility = function() {
         if (!e) { return; }
         if (visible) { e.show(); } else { e.hide(); }
     }
-    var supported = (typeof SyncService !== "undefined") && SyncService.isSupported();
-    setVis("pcSyncGroup", supported);          // TouchPad-only section
-    if (!supported) { return; }
-    var loggedIn = SyncService.isEnabled();
+    setVis("pcSyncGroup", true);               // available on all devices
+    var loggedIn = (typeof SyncService !== "undefined") && SyncService.isEnabled();
     setVis("pcSyncLoggedOut", !loggedIn);
     setVis("pcSyncLoggedIn", loggedIn);
     if (loggedIn) {

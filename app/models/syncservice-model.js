@@ -31,20 +31,11 @@ SyncServiceClass.prototype.base = function() {
     return Prefs.pcSyncURLBase || this.DEFAULT_BASE;
 };
 
-// Sync is a TouchPad (webOS 3.x+) feature only: older devices use tiny feeds,
-// whose proxied/truncated URLs don't match Pocket Casts. On those devices this
-// returns false and the whole feature stays inert.
-SyncServiceClass.prototype.isSupported = function() {
-    try {
-        return !!(Mojo.Environment && Mojo.Environment.DeviceInfo &&
-                  Mojo.Environment.DeviceInfo.platformVersionMajor >= 3);
-    } catch (e) {
-        return false;
-    }
-};
-
+// Available on all devices: everything uses tiny feeds and sync matches by
+// episode title, so there's no device requirement. The feature is inert until
+// the user signs in (no token).
 SyncServiceClass.prototype.isEnabled = function() {
-    return this.isSupported() && !!Prefs.pcSyncToken;
+    return !!Prefs.pcSyncToken;
 };
 
 // Normalize an episode title for matching. Title is the primary sync key because
@@ -60,10 +51,6 @@ SyncServiceClass.prototype.normTitle = function(t) {
 // ---- auth ----------------------------------------------------------------
 
 SyncServiceClass.prototype.login = function(email, password, callback) {
-    if (!this.isSupported()) {
-        if (callback) { callback(false, "Pocket Casts sync requires a TouchPad (webOS 3.0+)."); }
-        return;
-    }
     var url = this.base() + "login";   // base ends in "/"
     Mojo.Log.info("SyncService.login(%s)", email);
     new Ajax.Request(url, {
