@@ -589,7 +589,7 @@ DBClass.prototype.defaultFeeds = function() {
     feedModel.add(feed);
 
     var feed = new Feed();
-    feed.url = "http://podcasts.webosarchive.org/tiny.php?url=aHR0cHM6Ly9mZWVkcy5tZWdhcGhvbmUuZm0vc3R1ZmZ5b3VzaG91bGRrbm93&max=25";
+    feed.url = "http://podcasts.webosarchive.org/tiny.php?url=aHR0cHM6Ly9vbW55Y29udGVudC5jb20vZC9wbGF5bGlzdC9lNzNjOTk4ZS02ZTYwLTQzMmYtODYxMC1hZTIxMDE0MGM1YjEvQTkxMDE4QTQtRUE0Ri00MTMwLUJGNTUtQUUyNzAxODBDMzI3LzQ0NzEwRUNDLTEwQkItNDhEMS05M0M3LUFFMjcwMTgwQzMzRS9wb2RjYXN0LnJzcw&max=25";
     feed.title = "Stuff You Should Know";
     feed.interval = 30000;
     feedModel.add(feed);
