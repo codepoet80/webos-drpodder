@@ -131,6 +131,17 @@ FeedListAssistant.prototype.setup = function() {
     }
 };
 
+// Force a Pocket Casts sync right after a podcast is added, so its played /
+// in-progress state comes down immediately. Shows a banner so the sync is
+// visible (autoSync forces past the throttle; it still no-ops if signed out).
+FeedListAssistant.prototype.syncAddedFeed = function() {
+    if (typeof SyncService === "undefined" || !SyncService.isEnabled()) { return; }
+    Util.banner($L("Syncing new podcast with Pocket Casts") + "...");
+    SyncService.autoSync(true, function(ok) {
+        if (ok) { Util.banner($L("Pocket Casts sync complete")); }
+    });
+};
+
 FeedListAssistant.prototype.activate = function(result) {
     this.active = true;
 
@@ -140,13 +151,14 @@ FeedListAssistant.prototype.activate = function(result) {
             var feed = new Feed();
             feed.title = result.feedToAdd.title;
             feed.url = result.feedToAdd.url;
-            // This feed loads its episodes asynchronously; sync once they're in
-            // so Pocket Casts playback state can land on the new episodes.
+            // This feed loads its episodes asynchronously (feedModel.add is
+            // synchronous, but feed.update's ajax completes later). Only once the
+            // load callback fires do the new episodes exist and the feed sit in
+            // feedModel, so sync THERE -- syncing at activate time would run
+            // before the podcast is really added.
             feed.update(function() {
-                if (typeof SyncService !== "undefined" && SyncService.isEnabled()) {
-                    SyncService.autoSync(true, function() {});
-                }
-            });
+                this.syncAddedFeed();
+            }.bind(this));
             feedModel.add(feed);
             result.feedAdded = true;
         }
@@ -163,15 +175,18 @@ FeedListAssistant.prototype.activate = function(result) {
         // this.feedList.mojo.revealItem(feedModel.items.length-1, true); //  XX
     }
 
-    // Sync with Pocket Casts whenever the feed list comes back to the top. A
-    // manually-added feed (episodes already loaded in the add scene) forces an
-    // immediate sync; the directory path above syncs in its own load callback;
-    // any other return to the list gets a throttled, opportunistic sync. Skipped
-    // while a full refresh is running -- that runs its own sync when it finishes.
-    if (typeof SyncService !== "undefined" && SyncService.isEnabled() &&
-        !(result && result.feedToAdd)) {
-        if (result && result.feedAdded) {
-            SyncService.autoSync(true, function() {});
+    // Sync with Pocket Casts when the feed list comes back to the top:
+    //  - directory add (feedToAdd): already handled by syncAddedFeed() in the
+    //    feed.update callback above, once the new episodes have loaded.
+    //  - manual add (feedAdded, no feedToAdd): episodes were loaded synchronously
+    //    in the add scene, so sync now.
+    //  - any other return to the list: a throttled opportunistic sync, skipped
+    //    mid-refresh (a full refresh runs its own sync when it finishes).
+    if (typeof SyncService !== "undefined" && SyncService.isEnabled()) {
+        if (result && result.feedToAdd) {
+            // handled by syncAddedFeed() in the feed.update callback above
+        } else if (result && result.feedAdded) {
+            this.syncAddedFeed();
         } else if (!feedModel.updatingFeeds) {
             SyncService.autoSync(false, function() {});
         }
