@@ -387,6 +387,12 @@ EpisodeListAssistant.prototype.handleCommand = function(event) {
                     this.feedObject.download();
                     Util.closeDashboard(DrPodder.DashboardStageName);
                     this.filterEpisodes();
+                    // The feed's episodes just reloaded; pull Pocket Casts state
+                    // onto them. Forced (a manual refresh is deliberate) but still
+                    // serialized/no-op'd by SyncService when signed out or busy.
+                    if (typeof SyncService !== "undefined" && SyncService.isEnabled()) {
+                        SyncService.autoSync(true, function() {});
+                    }
                 }.bind(this));
                 break;
             case "filterField-cmd":
