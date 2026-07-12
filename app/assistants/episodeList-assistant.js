@@ -374,6 +374,8 @@ EpisodeListAssistant.prototype.handleCommand = function(event) {
                 }
                 break;
             case "refresh-cmd":
+                Util.banner($L({value: "Refreshing", key: "refreshing"}) + ": " +
+                            (this.feedObject.title || this.feedObject.url));
                 this.cmdMenuModel.items[this.cmdMenuRefreshButtonPos].disabled = true;
                 this.controller.modelChanged(this.cmdMenuModel);
                 this.feedObject.update(function() {
