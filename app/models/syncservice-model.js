@@ -49,6 +49,17 @@ SyncServiceClass.prototype.normTitle = function(t) {
     return t.replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "");
 };
 
+// Strip a leading episode-number prefix that some feeds carry but Pocket Casts
+// drops, e.g. libsyn's "Episode 512: The Fifth Gate" vs Pocket Casts' plain
+// "The Fifth Gate". Operates on an already-normalized title (see normTitle).
+// Returns "" when no letters remain (title was only a number), so callers can
+// ignore it rather than match on an empty/near-empty key.
+SyncServiceClass.prototype.stripEpisodeNo = function(nt) {
+    var s = (nt || "").replace(
+        /^(episode|ep|part|pt|chapter|ch|no|number)?\s*#?\s*\d+\s*[:.)\-–—]\s+/, "");
+    return /[a-z]/.test(s) ? s : "";
+};
+
 // ---- auth ----------------------------------------------------------------
 
 SyncServiceClass.prototype.login = function(email, password, callback) {
@@ -128,14 +139,30 @@ SyncServiceClass.prototype.pull = function(callback) {
 
 // Apply pulled playback state to local episodes. Matches by enclosure URL first
 // (full feeds share the publisher's URLs with Pocket Casts), then by episode
-// title as a fallback. Returns the number of episodes changed.
+// title, then by title with a leading episode-number prefix stripped (so a
+// libsyn "Episode 512: The Fifth Gate" matches Pocket Casts' "The Fifth Gate").
+// Returns the number of episodes changed.
 SyncServiceClass.prototype.applyPull = function(episodes) {
     var byEnclosure = {};
     var byTitle = {};
+    var stripped = {};   // stripped-title -> record; null once a key is ambiguous
     episodes.forEach(function(e) {
         if (e.enclosureUrl) { byEnclosure[e.enclosureUrl] = e; }
-        if (e.title) { byTitle[this.normTitle(e.title)] = e; }
+        if (e.title) {
+            var nt = this.normTitle(e.title);
+            byTitle[nt] = e;
+            var st = this.stripEpisodeNo(nt);
+            if (st && st !== nt) {
+                stripped[st] = (stripped[st] === undefined || stripped[st] === e) ? e : null;
+            }
+        }
     }.bind(this));
+    // Fold unambiguous stripped keys in as fallbacks, but never let one shadow an
+    // exact title (a real "The Fifth Gate" episode wins over anything that only
+    // collapses onto it after dropping a number prefix).
+    for (var sk in stripped) {
+        if (stripped[sk] && byTitle[sk] === undefined) { byTitle[sk] = stripped[sk]; }
+    }
 
     // Newer-wins reconciliation. A local change still sitting in the push queue
     // hasn't been confirmed to Pocket Casts yet, so it is by definition newer
@@ -153,8 +180,13 @@ SyncServiceClass.prototype.applyPull = function(episodes) {
         feedModel.items.forEach(function(feed) {
             if (!feed.episodes) { return; }
             feed.episodes.forEach(function(ep) {
+                var nt = ep.title ? this.normTitle(ep.title) : null;
                 var rec = (ep.enclosure && byEnclosure[ep.enclosure]) ||
-                          (ep.title && byTitle[this.normTitle(ep.title)]);
+                          (nt && byTitle[nt]);
+                if (!rec && nt) {
+                    var st = this.stripEpisodeNo(nt);
+                    if (st) { rec = byTitle[st]; }
+                }
                 if (!rec) { return; }
                 if (this.isPending(ep, pending)) { kept++; return; }
                 if (this.applyRecordToEpisode(ep, rec)) { changed++; }
