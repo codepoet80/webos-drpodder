@@ -1355,10 +1355,14 @@ FeedModel.prototype.updateFeeds = function(feedIndex) {
         AppAssistant.powerService.activityEnd(null, "FeedsUpdating");
 
         // After every feed refresh (user-initiated or scheduled), sync playback
-        // state with Pocket Casts if the user is signed in.
+        // state with Pocket Casts if the user is signed in. Bannered so it's
+        // visible that the sync ran.
         if (typeof SyncService !== "undefined" && SyncService.isEnabled() &&
             Prefs.pcSyncOnUpdate) {
-            SyncService.syncNow(function() {});
+            Util.banner($L("Syncing with Pocket Casts") + "...");
+            SyncService.syncNow(function(ok) {
+                if (ok) { Util.banner($L("Pocket Casts sync complete")); }
+            });
         }
     }
 };
